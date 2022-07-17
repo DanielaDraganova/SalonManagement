@@ -11,7 +11,6 @@ function AppRouter() {
         <Route path="/catalog" element={<div>Catalog page</div>}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
-        <Route path="/logout" element={<Logout />}></Route>
       </Routes>
     </BrowserRouter>
   );
