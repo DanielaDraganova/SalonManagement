@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, logout } from "../../firebase";
 import styles from "./Header.module.css";
@@ -14,7 +14,7 @@ function Header() {
   return (
     <nav>
       <div className={styles.logo}>
-        <h4>The Nav {user ? user.email : "No user"}</h4>
+        <h4>The Nav </h4>
       </div>
       <ul
         className={`${isNavActive ? styles["nav-active"] : ""} ${
@@ -27,15 +27,22 @@ function Header() {
         <li>
           <a href="/catalog">Catalog</a>
         </li>
-        <li>
-          <a href="/login">Login</a>
-        </li>
-        <li>
-          <a href="/register">Register</a>
-        </li>
-        <li>
-          <a onClick={logout}>Logout</a>
-        </li>
+        {user ? (
+          <li>
+            <a onClick={logout}>Logout</a>
+          </li>
+        ) : (
+          <React.Fragment>
+            <li>
+              <a href="/login">Login</a>
+            </li>
+            <li>
+              <a href="/register">Register</a>
+            </li>
+          </React.Fragment>
+        )}
+
+        <li>Welcome, {user ? user.email : "guest"}</li>
       </ul>
       <div className={styles.burger} onClick={toggleNavActive}>
         <div className={styles.line1}></div>

@@ -27,6 +27,8 @@ nav{
 }
 .nav-links li{
     list-style: none;
+    color:  rgb(226, 226, 226);
+    font-weight: bold;
 }
 
 .nav-links a {
@@ -95,3 +97,4 @@ nav{
         transform: translateX(0px);
     }
 }
+
