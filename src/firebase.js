@@ -92,8 +92,23 @@ const sendPasswordReset = async (email) => {
     alert(err.message);
   }
 };
+
 const logout = () => {
   signOut(auth);
+};
+
+const createSalonInDB = async (salon) => {
+  try {
+    console.log(db);
+    await addDoc(collection(db, "salons"), {
+      name: salon.name,
+      description: salon.description,
+      location: salon.location,
+    });
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
 };
 export {
   auth,
@@ -103,4 +118,5 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
+  createSalonInDB,
 };

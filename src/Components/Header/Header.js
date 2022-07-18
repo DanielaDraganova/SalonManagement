@@ -39,6 +39,9 @@ function Header() {
             <li>
               <a href="/register">Register</a>
             </li>
+            <li>
+              <a href="/create-salon">Add new salon</a>
+            </li>
           </React.Fragment>
         )}
 
