@@ -1,5 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   GoogleAuthProvider,
@@ -19,6 +21,7 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,6 +30,7 @@ import {
 const firebaseConfig = {
   apiKey: "AIzaSyB_3mM7Ql7go6JtD59fxFUQR94HLxYU38w",
   authDomain: "beautysalonapp-31438.firebaseapp.com",
+  databaseURL: "gs://beautysalonapp-31438.appspot.com",
   projectId: "beautysalonapp-31438",
   storageBucket: "beautysalonapp-31438.appspot.com",
   messagingSenderId: "1014802981494",
@@ -36,11 +40,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 const auth = getAuth(app);
 
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
+
 const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
@@ -60,6 +66,7 @@ const signInWithGoogle = async () => {
     alert(err.message);
   }
 };
+
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -68,6 +75,7 @@ const logInWithEmailAndPassword = async (email, password) => {
     alert(err.message);
   }
 };
+
 const registerWithEmailAndPassword = async (name, email, password) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -83,6 +91,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     alert(err.message);
   }
 };
+
 const sendPasswordReset = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
@@ -100,16 +109,30 @@ const logout = () => {
 const createSalonInDB = async (salon) => {
   try {
     console.log(db);
-    await addDoc(collection(db, "salons"), {
-      name: salon.name,
-      description: salon.description,
-      location: salon.location,
-    });
+    await addDoc(collection(db, "salons"), salon);
   } catch (err) {
     console.error(err);
     alert(err.message);
   }
 };
+
+const uploadFiles = (files) => {
+  const imageUuids = [];
+  for (let i = 0; i < files.length; i++) {
+    let currUuid = uuidv4();
+    imageUuids.push(currUuid);
+    const storageRef = ref(storage, currUuid);
+    uploadBytes(storageRef, files[i]).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+      console.log(snapshot);
+    });
+  }
+  return imageUuids;
+};
+const getAllSalons = async () => {
+  return await getDocs(collection(db, "salons"));
+};
+
 export {
   auth,
   db,
@@ -119,4 +142,7 @@ export {
   sendPasswordReset,
   logout,
   createSalonInDB,
+  storage,
+  uploadFiles,
+  getAllSalons,
 };
