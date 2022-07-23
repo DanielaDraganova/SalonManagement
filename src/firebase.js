@@ -1,14 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {
-  getDownloadURL,
-  getStorage,
-  listAll,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { useEffect } from "react";
 
 import {
   GoogleAuthProvider,
@@ -20,10 +13,13 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+
 import {
   getFirestore,
   query,
   getDocs,
+  getDoc,
+  doc,
   collection,
   where,
   addDoc,
@@ -145,6 +141,19 @@ const getAllSalons = async () => {
   return await getDocs(collection(db, "salons"));
 };
 
+const getOneSalon = async (salonId) => {
+  const docRef = doc(db, "salons", salonId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    return docSnap.data();
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+};
+
 export {
   auth,
   db,
@@ -158,4 +167,5 @@ export {
   uploadFiles,
   getAllSalons,
   getImageUrls,
+  getOneSalon,
 };

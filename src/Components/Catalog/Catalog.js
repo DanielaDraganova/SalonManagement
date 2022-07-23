@@ -38,7 +38,6 @@ const Catalog = () => {
           <div className={styles["image-container"]}>
             {Object.entries(s.imageUrls ? s.imageUrls : []).map(
               ([key, imageId]) => {
-                const imageKey = `image-${key}`;
                 const image = `${imageId}`;
 
                 return <img src={image} alt="" />;
@@ -52,7 +51,7 @@ const Catalog = () => {
           </div>
 
           <div className={styles["button-container"]}>
-            <a href="/salon-details" className={styles.button}>
+            <a href={`/${s.id}/salon-details`} className={styles.button}>
               Reed More →
             </a>
           </div>
