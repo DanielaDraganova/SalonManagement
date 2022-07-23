@@ -36,13 +36,7 @@ const Catalog = () => {
       <div className={styles["index-post"]}>
         <div className={styles.container}>
           <div className={styles["image-container"]}>
-            {Object.entries(s.imageUrls ? s.imageUrls : []).map(
-              ([key, imageId]) => {
-                const image = `${imageId}`;
-
-                return <img src={image} alt="" />;
-              }
-            )}
+            <img src={s.imageUrls[0]} alt="" />;
           </div>
 
           <div className={styles["meta-container"]}>
