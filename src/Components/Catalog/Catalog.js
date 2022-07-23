@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllSalons, getImageUrls } from "../../firebase";
+import styles from "./Catalog.module.css";
 
 const Catalog = () => {
   const [salons, setSalons] = useState([]);
@@ -31,23 +32,30 @@ const Catalog = () => {
   //{s.salonName}
 
   const salonElements = salons.map((s) => (
-    <div key={s.id} className="index-post">
-      <div className="container">
-        <div className="image-container">
-          <div>{s.salonName}</div>
+    <div key={s.id} className="salon-container">
+      <div className={styles["index-post"]}>
+        <div className={styles.container}>
+          <div className={styles["image-container"]}>
+            {Object.entries(s.imageUrls ? s.imageUrls : []).map(
+              ([key, imageId]) => {
+                const imageKey = `image-${key}`;
+                const image = `${imageId}`;
 
-          {Object.entries(s.imageUrls ? s.imageUrls : []).map(
-            ([key, imageId]) => {
-              const imageKey = `image-${key}`;
-              const image = `${imageId}`;
+                return <img src={image} alt="" />;
+              }
+            )}
+          </div>
 
-              return (
-                <div key={imageKey}>
-                  <img src={image} alt="" />
-                </div>
-              );
-            }
-          )}
+          <div className={styles["meta-container"]}>
+            <h2 className={styles.title}>{s.salonName}</h2>
+            <span className={styles.desc}>{s.description}</span>
+          </div>
+
+          <div className={styles["button-container"]}>
+            <a href="/salon-details" className={styles.button}>
+              Reed More →
+            </a>
+          </div>
         </div>
       </div>
     </div>
