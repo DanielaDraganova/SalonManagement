@@ -19,23 +19,24 @@ function CreateSalon() {
 
   const createSalonHandler = () => {
     if (!managerName) alert("Please enter name");
-    const imgUuids = uploadFiles(images);
+    const imageIds = uploadFiles(images);
+
     createSalonInDB({
       salonName,
       managerName,
       description,
       location,
-      imgUuids,
+      imageIds,
+    }).then(() => {
+      ref.current.value = "";
+
+      setManagerName("");
+      setDescription("");
+      setSalonName("");
+      setLocation("");
+
+      navigate("/catalog");
     });
-
-    ref.current.value = "";
-
-    setManagerName("");
-    setDescription("");
-    setSalonName("");
-    setLocation("");
-
-    navigate("/catalog");
   };
   useEffect(() => {
     if (loading) return;

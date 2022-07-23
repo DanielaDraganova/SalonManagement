@@ -1,7 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  listAll,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import { useEffect } from "react";
 
 import {
   GoogleAuthProvider,
@@ -117,17 +124,22 @@ const createSalonInDB = async (salon) => {
 };
 
 const uploadFiles = (files) => {
-  const imageUuids = [];
+  const imageIds = [];
+
   for (let i = 0; i < files.length; i++) {
-    let currUuid = uuidv4();
-    imageUuids.push(currUuid);
-    const storageRef = ref(storage, currUuid);
-    uploadBytes(storageRef, files[i]).then((snapshot) => {
-      console.log("Uploaded a blob or file!");
-      console.log(snapshot);
-    });
+    let currId = uuidv4();
+    const storageRef = ref(storage, `salonsImages/${currId}`);
+    uploadBytes(storageRef, files[i]);
+    imageIds.push(currId);
   }
-  return imageUuids;
+  return imageIds;
+};
+
+const getImageUrls = (imageIds) => {
+  const urlPromises = imageIds.map((id) =>
+    getDownloadURL(ref(storage, `salonsImages/${id}`))
+  );
+  return Promise.all(urlPromises);
 };
 const getAllSalons = async () => {
   return await getDocs(collection(db, "salons"));
@@ -145,4 +157,5 @@ export {
   storage,
   uploadFiles,
   getAllSalons,
+  getImageUrls,
 };
