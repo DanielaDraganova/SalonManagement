@@ -16,6 +16,7 @@
     padding: 10px;
     font-size: 18px;
     margin-bottom: 10px;
+    border-radius: 10px
   }
   .login__btn {
     padding: 10px;
@@ -24,10 +25,19 @@
     border: none;
     color: white;
     background-color: black;
+    border-radius: 10px
   }
   .login__google {
     background-color: #4285f4;
+    
   }
   .login div {
     margin-top: 7px;
+    border-radius: 10px
   }
+
+.label{
+  font-family: 'Poppins';
+  color: #5d4954;
+  font-weight: bold;
+}

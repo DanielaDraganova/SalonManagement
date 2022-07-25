@@ -23,3 +23,29 @@
 .image-style{
     height: 600px;
 }
+
+.button-container{
+    display: flex;
+    align-items: center;
+    width: 80%;
+    text-align: center;
+    height: 40px;
+
+}
+
+.button-container .button{
+    width: 15%;
+    padding: 6px 0;
+    text-decoration: none;
+    background: linear-gradient(125deg, #00ff35 0%, #0091a7 60%);
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s;
+
+}
+
+.button-container .button:hover{
+    padding-left: 15px;
+
+}

@@ -28,9 +28,15 @@ function Header() {
           <a href="/catalog">Catalog</a>
         </li>
         {user ? (
-          <li>
-            <a onClick={logout}>Logout</a>
-          </li>
+          <React.Fragment>
+            <li>
+              <a onClick={logout}>Logout</a>
+            </li>
+
+            <li>
+              <a href="/create-salon">Add salon</a>
+            </li>
+          </React.Fragment>
         ) : (
           <React.Fragment>
             <li>
@@ -38,9 +44,6 @@ function Header() {
             </li>
             <li>
               <a href="/register">Register</a>
-            </li>
-            <li>
-              <a href="/create-salon">Add new salon</a>
             </li>
           </React.Fragment>
         )}

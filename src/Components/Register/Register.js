@@ -1,65 +1,176 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  auth,
-  registerWithEmailAndPassword,
-  signInWithGoogle,
-} from "../../firebase";
-import styles from "../Register/Register.module.css";
+import { auth, registerWithEmailAndPassword } from "../../firebase";
+import styles from "./Register.module.css";
 
-function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [user, loading, error] = useAuthState(auth);
+const Register = () => {
+  const [input, setInput] = useState({
+    name: "",
+    email: "",
+    password: "",
+    repPass: "",
+  });
+
+  const [err, setErr] = useState({
+    name: "",
+    email: "",
+    password: "",
+    repPass: "",
+  });
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
+    setInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    validateInput(e);
+  };
+
+  const validateInput = (e) => {
+    let { name, value } = e.target;
+    setErr((prev) => {
+      const stateObj = { ...prev, [name]: "" };
+
+      switch (name) {
+        case "name":
+          if (!value) {
+            stateObj[name] = "Please enter your Full Name.";
+          }
+          break;
+
+        case "email":
+          const pattern =
+            /[a-zA-Z0-9]+[\.]?([a-zA-Z0-9]+)?[\@][a-z]{3,9}[\.][a-z]{2,5}/g;
+          if (!value) {
+            stateObj[name] = "Please enter your Email.";
+          } else {
+            const result = pattern.test(value);
+            if (result === false) {
+              stateObj[name] = "Invalid Email";
+            }
+          }
+
+        case "password":
+          if (!value) {
+            stateObj[name] = "Please enter your Password.";
+          } else if (input.repPass && value !== input.repPass) {
+            stateObj["repPass"] =
+              "Password and Repeat Password does not match.";
+          } else {
+            stateObj["repPass"] = input.repPass ? "" : err.repPass;
+          }
+          break;
+
+        case "repPass":
+          if (!value) {
+            stateObj[name] = "Please enter your Repeat Password.";
+          } else if (input.password && value !== input.password) {
+            stateObj[name] = "Password and Repeat Password does not match.";
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      return stateObj;
+    });
+  };
+
   const navigate = useNavigate();
-  const register = () => {
-    if (!name) alert("Please enter name");
-    registerWithEmailAndPassword(name, email, password);
+  const [user, loading, error] = useAuthState(auth);
+
+  const register = (e) => {
+    e.preventDefault();
+
+    let valid = true;
+    Object.values(err).forEach((e) => {
+      if (e.length != 0) {
+        valid = false;
+      }
+    });
+    if (!valid) {
+    } else {
+      registerWithEmailAndPassword(input.name, input.email, input.password);
+    }
   };
   useEffect(() => {
     if (loading) return;
-    if (user) navigate("/dashboard");
+    if (user) navigate("/catalog");
   }, [user, loading]);
   return (
     <div className={styles.register}>
-      <div className={styles["register__container"]}>
-        <input
-          type="text"
-          className={styles["register__textBox"]}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Full Name"
-        />
-        <input
-          type="text"
-          className={styles["register__textBox"]}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail Address"
-        />
-        <input
-          type="password"
-          className={styles["register__textBox"]}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button className={styles["register__btn"]} onClick={register}>
-          Register
-        </button>
-        <button
-          className={styles["register__btn register__google"]}
-          onClick={signInWithGoogle}
-        >
-          Register with Google
-        </button>
-        <div>
-          Already have an account? <Link to="/">Login</Link> now.
+      <form onSubmit={register}>
+        <div className={styles["register__container"]}>
+          <label htmlFor="fullName">Full Name</label>
+          <input
+            required
+            id="fullName"
+            name="name"
+            type="text"
+            className={styles["register__textBox"]}
+            value={input.name}
+            placeholder="Full Name"
+            onChange={onInputChange}
+            onBlur={validateInput}
+          />
+          {err.name && <span className={styles.err}>{err.name}</span>}
+
+          <label htmlFor="email">Email</label>
+          <input
+            required
+            id="email"
+            name="email"
+            type="text"
+            className={styles["register__textBox"]}
+            value={input.email}
+            placeholder="E-mail Address"
+            onChange={onInputChange}
+            onBlur={validateInput}
+          />
+          {err.email && <span className={styles.err}>{err.email}</span>}
+
+          <label htmlFor="password">Password</label>
+          <input
+            required
+            id="password"
+            name="password"
+            type="password"
+            className={styles["register__textBox"]}
+            value={input.password}
+            placeholder="Password"
+            onChange={onInputChange}
+            onBlur={validateInput}
+          />
+          {err.password && <span className={styles.err}>{err.password}</span>}
+
+          <label htmlFor="repPass">Repeat Password</label>
+          <input
+            required
+            id="repPass"
+            name="repPass"
+            type="password"
+            className={styles["register__textBox"]}
+            value={input.repPass}
+            placeholder="Repeat Password"
+            onChange={onInputChange}
+            onBlur={validateInput}
+          />
+
+          {err.repPass && <span className={styles.err}>{err.repPass}</span>}
+
+          <button type="submit" className={styles["register__btn"]}>
+            Register
+          </button>
+
+          <div>
+            Already have an account? <Link to="/login">Login</Link> now.
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
-}
+};
+
 export default Register;

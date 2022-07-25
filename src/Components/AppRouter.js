@@ -5,6 +5,7 @@ import Register from "./Register/Register";
 import CreateSalon from "./CreateSalon/CreateSalon";
 import Catalog from "./Catalog/Catalog";
 import Details from "./Details/Details";
+import { Edit } from "./Edit/Edit";
 
 function AppRouter() {
   return (
@@ -16,6 +17,7 @@ function AppRouter() {
         <Route path="/register" element={<Register />}></Route>
         <Route path="/create-salon" element={<CreateSalon />}></Route>
         <Route path="/:salonId/salon-details" element={<Details />}></Route>
+        <Route path="/:salonId/salon-edit" element={<Edit />}></Route>
       </Routes>
     </BrowserRouter>
   );
