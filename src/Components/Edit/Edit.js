@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, editSalon } from "../../firebase";
+import { auth, editSalonInDB } from "../../firebase";
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 import { getOneSalon, getImageUrls } from "../../firebase";
@@ -23,13 +23,19 @@ const customStyles = {
 export const Edit = () => {
   const params = useParams();
   const salonId = params.salonId;
-  const [salon, setSalon] = useState("");
+
   const [input, setInput] = useState({
     salonName: "",
     managerName: "",
     description: "",
     location: "",
     services: [],
+  });
+
+  const [serviceInput, setServiceInput] = useState({
+    service: "",
+    staffCount: "",
+    serviceDescription: "",
   });
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -46,23 +52,28 @@ export const Edit = () => {
 
       const imageUrls = await getImageUrls(salonRes.imageIds);
       salonRes.imageUrls = imageUrls;
-      setSalon(salonRes);
       console.log("SALON RES:");
       console.log(salonRes);
+
       setInput({
-        salonName: salon.salonName,
-        managerName: salon.managerName,
-        description: salon.description,
-        location: salon.location,
+        salonName: salonRes.salonName,
+        managerName: salonRes.managerName,
+        description: salonRes.description,
+        location: salonRes.location,
       });
     }
     getOne();
   }, []);
-  console.log(salon);
 
   const [err, setErr] = useState({
     email: "",
     password: "",
+  });
+
+  const [serviceInputErr, setServiceInputErr] = useState({
+    service: "",
+    staffCount: "",
+    serviceDescription: "",
   });
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
@@ -75,10 +86,50 @@ export const Edit = () => {
     }));
     validateInput(e);
   };
+
+  const onServiceInputChange = (e) => {
+    const { name, value } = e.target;
+    setServiceInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    validateInput(e);
+  };
   useEffect(() => {
     if (loading) return;
     if (!user) navigate("/catalog");
   }, [user, loading]);
+
+  const validateServiceInput = (e) => {
+    let { name, value } = e.target;
+    setErr((prev) => {
+      const stateObj = { ...prev, [name]: "" };
+      switch (name) {
+        case "service":
+          if (!value) {
+            stateObj[name] = "Please enter Type of Service.";
+          }
+          break;
+
+        case "staffCount":
+          if (!value) {
+            stateObj[name] = "Please enter Staff Count.";
+          }
+          break;
+
+        case "serviceDescription":
+          if (!value) {
+            stateObj[name] = "Please enter Service description.";
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      return stateObj;
+    });
+  };
 
   const validateInput = (e) => {
     let { name, value } = e.target;
@@ -104,6 +155,24 @@ export const Edit = () => {
           }
           break;
 
+        case "service":
+          if (!value) {
+            stateObj[name] = "Please enter Type of Service.";
+          }
+          break;
+
+        case "staffCount":
+          if (!value) {
+            stateObj[name] = "Please enter Staff Count.";
+          }
+          break;
+
+        case "serviceDescription":
+          if (!value) {
+            stateObj[name] = "Please enter Service description.";
+          }
+          break;
+
         default:
           break;
       }
@@ -112,18 +181,22 @@ export const Edit = () => {
     });
   };
 
-  const editSalon = (e) => {
+  const editSalon = async (e) => {
     e.preventDefault();
+    console.log("in edit handler");
 
     let valid = true;
     Object.values(err).forEach((e) => {
       if (e.length != 0) {
         valid = false;
+        console.log(e);
       }
     });
     if (!valid) {
+      alert("Invalid input");
     } else {
-      editSalon({ ...input });
+      await editSalonInDB(salonId, { ...input });
+      navigate("/catalog");
     }
   };
 
@@ -208,15 +281,73 @@ export const Edit = () => {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          {/* <button onClick={closeModal}>close</button>
-          <div>I am a modal</div>
+          <button className={styles["close-btn"]} onClick={closeModal}>
+            x
+          </button>
+
           <form>
-            <input />
-            <button>tab navigation</button>
-            <button>stays</button>
-            <button>inside</button>
-            <button>the modal</button>
-          </form> */}
+            <div className={styles["modal__container"]}>
+              <label htmlFor="service" className={styles.label}>
+                Type of service
+              </label>
+              <input
+                required
+                id="service"
+                type="text"
+                name="service"
+                className={styles["modal__textBox"]}
+                value={serviceInput.service}
+                placeholder="Enter type of service"
+                onChange={onServiceInputChange}
+                onBlur={validateServiceInput}
+              />
+              {serviceInputErr.service && (
+                <span className={styles.err}>{serviceInputErr.service}</span>
+              )}
+
+              <label htmlFor="staffCount" className={styles.label}>
+                Staff Count
+              </label>
+              <input
+                required
+                id="staffCount"
+                type="number"
+                name="staffCount"
+                className={styles["modal__textBox"]}
+                value={serviceInput.staffCount}
+                placeholder="Enter staff count"
+                onChange={onServiceInputChange}
+                onBlur={validateServiceInput}
+              />
+              {serviceInputErr.staffCount && (
+                <span className={styles.err}>{serviceInputErr.staffCount}</span>
+              )}
+
+              <label htmlFor="serviceDescription" className={styles.label}>
+                Service Description
+              </label>
+              <input
+                required
+                id="serviceDescription"
+                type="text"
+                name="serviceDescription"
+                className={styles["modal__textBox"]}
+                value={serviceInput.serviceDescription}
+                placeholder="Enter description of the service"
+                onChange={onServiceInputChange}
+                onBlur={validateServiceInput}
+              />
+              {serviceInputErr.serviceDescription && (
+                <span className={styles.err}>
+                  {serviceInputErr.description}
+                </span>
+              )}
+
+              <button type="submit" className={styles["modal__btn"]}>
+                Login
+              </button>
+            </div>
+          </form>
         </Modal>
 
         <button className={styles["edit__btn"]} onClick={openModal}>

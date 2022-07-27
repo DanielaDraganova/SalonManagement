@@ -49,3 +49,40 @@
   color: #5d4954;
   font-weight: bold;
 }
+
+.modal__container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: #dcdcdc;
+  padding: 30px;
+}
+.modal__textBox {
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border-radius: 10px
+}
+.modal__btn {
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border: none;
+  color: white;
+  background-color: black;
+  border-radius: 10px
+}
+
+.label{
+  font-family: 'Poppins';
+  color: #5d4954;
+  font-weight: bold;
+}
+
+.close-btn{
+  margin-left: 100%;
+  font-size:large ;
+  padding: 0;
+  border: none;
+  background: none;
+}

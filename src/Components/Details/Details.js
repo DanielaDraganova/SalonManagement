@@ -27,6 +27,7 @@ const Details = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.centered}>{salon.salonName}</div>
       <Carousel>
         {salon.imageUrls
           ? salon.imageUrls.map((i) => (
@@ -37,8 +38,6 @@ const Details = () => {
             ))
           : ""}
       </Carousel>
-
-      <div className={styles.centered}>{salon.salonName}</div>
 
       <div className={styles["button-container"]}>
         <a href={`/${salonId}/salon-edit`} className={styles.button}>

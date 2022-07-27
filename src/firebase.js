@@ -23,6 +23,7 @@ import {
   collection,
   where,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -143,10 +144,22 @@ const getAllSalons = async () => {
 
 const getOneSalon = async (salonId) => {
   const docRef = doc(db, "salons", salonId);
-  const docSnap = await getDoc(docRef);
+  const res = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    return docSnap.data();
+  if (res.exists()) {
+    return res.data();
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+};
+
+const editSalonInDB = async (salonId, salonData) => {
+  const docRef = doc(db, "salons", salonId);
+  const res = await getDoc(docRef);
+
+  if (res.exists()) {
+    await updateDoc(docRef, salonData);
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");
@@ -167,4 +180,5 @@ export {
   getAllSalons,
   getImageUrls,
   getOneSalon,
+  editSalonInDB,
 };
