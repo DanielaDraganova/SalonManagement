@@ -6,12 +6,13 @@ import CreateSalon from "./CreateSalon/CreateSalon";
 import Catalog from "./Catalog/Catalog";
 import Details from "./Details/Details";
 import { Edit } from "./Edit/Edit";
+import { Home } from "./Home/Home";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home" element={<div>Home page</div>}></Route>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/catalog" element={<Catalog />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>

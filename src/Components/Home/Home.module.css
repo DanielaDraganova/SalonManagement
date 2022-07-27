@@ -1,0 +1,77 @@
+
+
+/* .app-description{
+    text-align: center;
+    color: black;
+    height: 500px;
+    padding-top: 300px;
+} */
+
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+
+.container{
+    width: 80%;
+    margin: 0% 0% 0% 0%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+    width: 100%;
+    height: auto;
+    overflow: visible;
+
+}
+
+.container img{
+    width: 100%;
+  
+}
+
+.text{
+    width: 100%;
+    position: relative;
+    margin-top: -40%;
+}
+
+.text {
+    text-align: center;
+    color: white;
+    font-size: 11vh;
+    font-family: "lobster", cursive
+}
+
+.button-container{
+    display: flex;
+    align-items: center;
+    width: 80%;
+    text-align: center;
+    height: 40px;
+    justify-content: center;
+    margin: auto;
+    margin-top: 15%;
+    
+
+}
+
+.button-container .button{
+    
+    width: 15%;
+    padding: 6px 0;
+    text-decoration: none;
+    background: linear-gradient(125deg, #00ff35 0%, #0091a7 60%);
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s;
+
+}
+
+.button-container .button:hover{
+    padding-left: 15px;
+
+}

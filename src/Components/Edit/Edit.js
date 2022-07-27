@@ -4,7 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, editSalon } from "../../firebase";
 import Modal from "react-modal";
-
+Modal.setAppElement("#root");
 import { getOneSalon, getImageUrls } from "../../firebase";
 
 import styles from "./Edit.module.css";
@@ -75,6 +75,10 @@ export const Edit = () => {
     }));
     validateInput(e);
   };
+  useEffect(() => {
+    if (loading) return;
+    if (!user) navigate("/catalog");
+  }, [user, loading]);
 
   const validateInput = (e) => {
     let { name, value } = e.target;
@@ -204,7 +208,7 @@ export const Edit = () => {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <button onClick={closeModal}>close</button>
+          {/* <button onClick={closeModal}>close</button>
           <div>I am a modal</div>
           <form>
             <input />
@@ -212,7 +216,7 @@ export const Edit = () => {
             <button>stays</button>
             <button>inside</button>
             <button>the modal</button>
-          </form>
+          </form> */}
         </Modal>
 
         <button className={styles["edit__btn"]} onClick={openModal}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllSalons, getImageUrls } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 import styles from "./Catalog.module.css";
 
 const Catalog = () => {
@@ -9,8 +10,6 @@ const Catalog = () => {
       const salonResults = await getAllSalons();
 
       const allSalons = [];
-
-      console.log("aasdasdasasdasddfsdfasdasdasdasdsd");
 
       salonResults.forEach((doc) =>
         allSalons.push({ id: doc.id, ...doc.data() })
@@ -46,7 +45,7 @@ const Catalog = () => {
 
           <div className={styles["button-container"]}>
             <a href={`/${s.id}/salon-details`} className={styles.button}>
-              Reed More →
+              Read More →
             </a>
           </div>
         </div>

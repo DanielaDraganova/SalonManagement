@@ -14,7 +14,7 @@ function Header() {
   return (
     <nav>
       <div className={styles.logo}>
-        <h4>The Nav </h4>
+        <h4>✿ Divine Beauty ✿</h4>
       </div>
       <ul
         className={`${isNavActive ? styles["nav-active"] : ""} ${
@@ -22,7 +22,7 @@ function Header() {
         }`}
       >
         <li>
-          <a href="/home">Home</a>
+          <a href="/">Home</a>
         </li>
         <li>
           <a href="/catalog">Catalog</a>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, logInWithEmailAndPassword } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -81,51 +81,61 @@ const Login = () => {
   }, [user, loading]);
 
   return (
-    <div className={styles.login}>
-      <form onSubmit={login}>
-        <div className={styles["login__container"]}>
-          <label htmlFor="email" className={styles.label}>
-            Email
-          </label>
-          <input
-            required
-            id="emails"
-            type="text"
-            name="email"
-            className={styles["login__textBox"]}
-            value={input.email}
-            placeholder="E-mail Address"
-            onChange={onInputChange}
-            onBlur={validateInput}
-          />
-          {err.email && <span className={styles.err}>{err.email}</span>}
+    <Fragment>
+      <div className={styles.welcome}>
+        <h2>
+          Welcome to our Divine Beauty
+          <br />
+          community
+        </h2>
+      </div>
 
-          <label htmlFor="password" className={styles.label}>
-            Password
-          </label>
-          <input
-            required
-            id="password"
-            type="password"
-            name="password"
-            className={styles["login__textBox"]}
-            value={input.password}
-            placeholder="Password"
-            onChange={onInputChange}
-            onBlur={validateInput}
-          />
-          {err.password && <span className={styles.err}>{err.password}</span>}
+      <div className={styles.login}>
+        <form onSubmit={login}>
+          <div className={styles["login__container"]}>
+            <label htmlFor="email" className={styles.label}>
+              Email
+            </label>
+            <input
+              required
+              id="emails"
+              type="text"
+              name="email"
+              className={styles["login__textBox"]}
+              value={input.email}
+              placeholder="E-mail Address"
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
+            {err.email && <span className={styles.err}>{err.email}</span>}
 
-          <button type="submit" className={styles["login__btn"]}>
-            Login
-          </button>
+            <label htmlFor="password" className={styles.label}>
+              Password
+            </label>
+            <input
+              required
+              id="password"
+              type="password"
+              name="password"
+              className={styles["login__textBox"]}
+              value={input.password}
+              placeholder="Password"
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
+            {err.password && <span className={styles.err}>{err.password}</span>}
 
-          <div>
-            Don't have an account? <Link to="/register">Register</Link> now.
+            <button type="submit" className={styles["login__btn"]}>
+              Login
+            </button>
+
+            <div>
+              Don't have an account? <Link to="/register">Register</Link> now.
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Fragment>
   );
 };
 export default Login;

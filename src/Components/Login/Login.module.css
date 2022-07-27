@@ -1,5 +1,5 @@
 .login {
-    height: 100vh;
+    height: 30vh;
     width: 100vw;
     display: flex;
     align-items: center;
@@ -40,4 +40,17 @@
   font-family: 'Poppins';
   color: #5d4954;
   font-weight: bold;
+}
+
+.welcome{
+  text-align: center;
+  color:  rgb(226, 226, 226);
+  min-height: 8vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-family: 'Poppins', sans-serif;
+  padding-top: 15vh;
+  padding-bottom: 5vh;
+  font-size: 20px;
 }

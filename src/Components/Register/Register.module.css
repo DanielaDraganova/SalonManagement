@@ -1,13 +1,13 @@
 .register {
-  height: 100vh;
+  height: 30vh;
   width: 100vw;
+  
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .register__container {
-  height: 600px;
-  width: 400px;
+ 
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -41,5 +41,18 @@
 .err{
   padding: 10px;
   font-size: 18px;
+}
+
+.welcome{
+  text-align: center;
+  color:  rgb(226, 226, 226);
+  min-height: 8vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-family: 'Poppins', sans-serif;
+  padding-top: 15vh;
+  padding-bottom: 5vh;
+  font-size: 20px;
 }
   
