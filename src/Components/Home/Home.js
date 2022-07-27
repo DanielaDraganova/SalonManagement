@@ -7,13 +7,10 @@ export const Home = () => {
     <Fragment>
       <div className={styles.container}>
         <img src={Background} alt="img" />
-
-        <div className={styles["button-container"]}>
-          <a href={`/catalog`} className={styles.button}>
-            Browse all salons →
-          </a>
-        </div>
       </div>
+      <a href="/catalog" className={styles["float"]}>
+        <button className={styles["my-float"]}>Browse all salons →</button>
+      </a>
     </Fragment>
   );
 };
