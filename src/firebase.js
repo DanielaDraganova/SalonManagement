@@ -24,6 +24,8 @@ import {
   where,
   addDoc,
   updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -166,6 +168,21 @@ const editSalonInDB = async (salonId, salonData) => {
   }
 };
 
+const addNewServiceInDB = async (salonId, service) => {
+  const docRef = doc(db, "salons", salonId);
+  await updateDoc(docRef, {
+    services: arrayUnion(service),
+  });
+};
+
+const deleteServiceInDB = async (salonId, service) => {
+  const docRef = doc(db, "salons", salonId);
+
+  await updateDoc(docRef, {
+    services: arrayRemove(service),
+  });
+};
+
 export {
   auth,
   db,
@@ -181,4 +198,5 @@ export {
   getImageUrls,
   getOneSalon,
   editSalonInDB,
+  addNewServiceInDB,
 };

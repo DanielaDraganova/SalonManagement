@@ -3,7 +3,7 @@ import Header from "./components/Header/Header";
 
 function App() {
   return (
-    <div class="page-content" style={{ backgroundColor: "#5d4954" }}>
+    <div style={{ backgroundColor: "#5d4954" }}>
       <Header />
       <AppRouter />
     </div>

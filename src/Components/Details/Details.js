@@ -31,7 +31,7 @@ const Details = () => {
       <Carousel>
         {salon.imageUrls
           ? salon.imageUrls.map((i) => (
-              <div className={styles["image-style"]}>
+              <div key={i} className={styles["image-style"]}>
                 <img src={i} alt="salonImg" />
                 <p className="legend"></p>
               </div>

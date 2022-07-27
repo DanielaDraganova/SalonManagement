@@ -94,6 +94,7 @@ function CreateSalon() {
         description: input.description,
         location: input.location,
         imageIds,
+        services: [],
       }).then(() => {
         ref.current.value = "";
         setInput({

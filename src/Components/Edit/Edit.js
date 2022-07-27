@@ -8,19 +8,12 @@ Modal.setAppElement("#root");
 import { getOneSalon, getImageUrls } from "../../firebase";
 
 import styles from "./Edit.module.css";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import { SalonService } from "./SalonServices/SalonServices";
 
 export const Edit = () => {
+  const [user, loading, error] = useAuthState(auth);
+  const navigate = useNavigate();
+
   const params = useParams();
   const salonId = params.salonId;
 
@@ -29,23 +22,10 @@ export const Edit = () => {
     managerName: "",
     description: "",
     location: "",
-    services: [],
   });
 
-  const [serviceInput, setServiceInput] = useState({
-    service: "",
-    staffCount: "",
-    serviceDescription: "",
-  });
+  const [services, setServices] = useState([]);
 
-  const [modalIsOpen, setIsOpen] = useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-  function closeModal() {
-    setIsOpen(false);
-  }
   useEffect(() => {
     async function getOne() {
       const salonRes = await getOneSalon(salonId);
@@ -53,8 +33,8 @@ export const Edit = () => {
       const imageUrls = await getImageUrls(salonRes.imageIds);
       salonRes.imageUrls = imageUrls;
       console.log("SALON RES:");
-      console.log(salonRes);
-
+      console.log(salonRes.services);
+      setServices(salonRes.services);
       setInput({
         salonName: salonRes.salonName,
         managerName: salonRes.managerName,
@@ -70,14 +50,6 @@ export const Edit = () => {
     password: "",
   });
 
-  const [serviceInputErr, setServiceInputErr] = useState({
-    service: "",
-    staffCount: "",
-    serviceDescription: "",
-  });
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
-
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({
@@ -87,49 +59,10 @@ export const Edit = () => {
     validateInput(e);
   };
 
-  const onServiceInputChange = (e) => {
-    const { name, value } = e.target;
-    setServiceInput((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    validateInput(e);
-  };
   useEffect(() => {
     if (loading) return;
     if (!user) navigate("/catalog");
   }, [user, loading]);
-
-  const validateServiceInput = (e) => {
-    let { name, value } = e.target;
-    setErr((prev) => {
-      const stateObj = { ...prev, [name]: "" };
-      switch (name) {
-        case "service":
-          if (!value) {
-            stateObj[name] = "Please enter Type of Service.";
-          }
-          break;
-
-        case "staffCount":
-          if (!value) {
-            stateObj[name] = "Please enter Staff Count.";
-          }
-          break;
-
-        case "serviceDescription":
-          if (!value) {
-            stateObj[name] = "Please enter Service description.";
-          }
-          break;
-
-        default:
-          break;
-      }
-
-      return stateObj;
-    });
-  };
 
   const validateInput = (e) => {
     let { name, value } = e.target;
@@ -200,10 +133,6 @@ export const Edit = () => {
     }
   };
 
-  //     const [openingTime, setOpeningTime] = useState("");
-  //     const [closingTime, setClosingTime] = useState("");
-  //     const [services, setServices] = useState("");
-  //     const [team, setTeam] = useState("");
   return (
     <div className={styles.edit}>
       <form onSubmit={editSalon}>
@@ -266,94 +195,7 @@ export const Edit = () => {
           </button>
         </div>
       </form>
-
-      <div className={styles["edit__container"]}>
-        <form action="">
-          <div className={styles.title}>SERVICES</div>
-          <div>
-            <p>You already do not have any services</p>
-          </div>
-        </form>
-
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <button className={styles["close-btn"]} onClick={closeModal}>
-            x
-          </button>
-
-          <form>
-            <div className={styles["modal__container"]}>
-              <label htmlFor="service" className={styles.label}>
-                Type of service
-              </label>
-              <input
-                required
-                id="service"
-                type="text"
-                name="service"
-                className={styles["modal__textBox"]}
-                value={serviceInput.service}
-                placeholder="Enter type of service"
-                onChange={onServiceInputChange}
-                onBlur={validateServiceInput}
-              />
-              {serviceInputErr.service && (
-                <span className={styles.err}>{serviceInputErr.service}</span>
-              )}
-
-              <label htmlFor="staffCount" className={styles.label}>
-                Staff Count
-              </label>
-              <input
-                required
-                id="staffCount"
-                type="number"
-                name="staffCount"
-                className={styles["modal__textBox"]}
-                value={serviceInput.staffCount}
-                placeholder="Enter staff count"
-                onChange={onServiceInputChange}
-                onBlur={validateServiceInput}
-              />
-              {serviceInputErr.staffCount && (
-                <span className={styles.err}>{serviceInputErr.staffCount}</span>
-              )}
-
-              <label htmlFor="serviceDescription" className={styles.label}>
-                Service Description
-              </label>
-              <input
-                required
-                id="serviceDescription"
-                type="text"
-                name="serviceDescription"
-                className={styles["modal__textBox"]}
-                value={serviceInput.serviceDescription}
-                placeholder="Enter description of the service"
-                onChange={onServiceInputChange}
-                onBlur={validateServiceInput}
-              />
-              {serviceInputErr.serviceDescription && (
-                <span className={styles.err}>
-                  {serviceInputErr.description}
-                </span>
-              )}
-
-              <button type="submit" className={styles["modal__btn"]}>
-                Login
-              </button>
-            </div>
-          </form>
-        </Modal>
-
-        <button className={styles["edit__btn"]} onClick={openModal}>
-          Add new service
-        </button>
-      </div>
+      <SalonService services={services} setServices={setServices} />
     </div>
   );
 };
