@@ -1,12 +1,17 @@
 .services__container {
-    display: flex;
+    /* display: flex; */
+    padding-top: 5;
     flex-direction: column;
     text-align: center;
     background-color: #dcdcdc;
     padding: 35px;
     margin: 20px;
+  
+   
     padding-top: 5px;
     padding-bottom: 5px;
+    
+    
 
 }
 
@@ -54,21 +59,9 @@
     font-weight: bold;
 }
 
-.spanLabel{
-    font-size: 22px;
-    color: black;
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-   
-}
 
-.spanContent{
-    font-size: 22px;
-    color: black;
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-   ;
-}
+
+
 
 .addService__btn {
     padding: 10px;
@@ -79,3 +72,4 @@
     background-color: black;
     border-radius: 10px
 }
+

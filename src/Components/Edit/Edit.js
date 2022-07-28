@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
@@ -134,68 +134,81 @@ export const Edit = () => {
   };
 
   return (
-    <div className={styles.edit}>
-      <form onSubmit={editSalon}>
-        <div className={styles["edit__container"]}>
-          <div className={styles.title}>Basic Information</div>
-          <label htmlFor="salonName">Salon Name</label>
-          <input
-            required
-            id="salonName"
-            type="text"
-            name="salonName"
-            className={styles["edit__textBox"]}
-            value={input.salonName}
-            placeholder="Salon Name"
-            onChange={onInputChange}
-            onBlur={validateInput}
-          />
+    <Fragment>
+      <div className={styles.tip}>
+        <h2>
+          These forms are designed for you to fill in everything customers need
+          <br />
+          to visit your salon.
+          <br />
+          Try to fill them flawlessly.
+          <br />
+          Success!
+        </h2>
+      </div>
+      <div className={styles.edit}>
+        <form onSubmit={editSalon}>
+          <div className={styles["edit__container"]}>
+            <div className={styles.title}>Basic Information</div>
+            <label htmlFor="salonName">Salon Name</label>
+            <input
+              required
+              id="salonName"
+              type="text"
+              name="salonName"
+              className={styles["edit__textBox"]}
+              value={input.salonName}
+              placeholder="Salon Name"
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
 
-          <label htmlFor="managerName">Manager Full Name</label>
-          <input
-            required
-            id="managerName"
-            type="text"
-            name="managerName"
-            className={styles["edit__textBox"]}
-            value={input.managerName}
-            placeholder="Full Name"
-            onChange={onInputChange}
-            onBlur={validateInput}
-          />
+            <label htmlFor="managerName">Manager Full Name</label>
+            <input
+              required
+              id="managerName"
+              type="text"
+              name="managerName"
+              className={styles["edit__textBox"]}
+              value={input.managerName}
+              placeholder="Full Name"
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
 
-          <label htmlFor="desc">Description</label>
-          <input
-            required
-            id="desc"
-            type="text"
-            name="description"
-            className={styles["edit__textBox"]}
-            value={input.description}
-            placeholder="Description"
-            onChange={onInputChange}
-            onBlur={validateInput}
-          />
+            <label htmlFor="desc">Description</label>
+            <input
+              required
+              id="desc"
+              type="text"
+              name="description"
+              className={styles["edit__textBox"]}
+              value={input.description}
+              placeholder="Description"
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
 
-          <label htmlFor="location">Location</label>
-          <input
-            required
-            id="location"
-            type="text"
-            name="location"
-            className={styles["edit__textBox"]}
-            value={input.location}
-            placeholder="Location"
-            onChange={onInputChange}
-            onBlur={validateInput}
-          />
+            <label htmlFor="location">Location</label>
+            <input
+              required
+              id="location"
+              type="text"
+              name="location"
+              className={styles["edit__textBox"]}
+              value={input.location}
+              placeholder="Location"
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
 
-          <button type="submit" className={styles["edit__btn"]}>
-            Edit Salon
-          </button>
-        </div>
-      </form>
-      <SalonService services={services} setServices={setServices} />
-    </div>
+            <button type="submit" className={styles["edit__btn"]}>
+              Edit Salon
+            </button>
+          </div>
+        </form>
+        <SalonService services={services} setServices={setServices} />
+      </div>
+    </Fragment>
   );
 };

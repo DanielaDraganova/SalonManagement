@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { auth, addNewServiceInDB } from "../../../firebase";
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 import { getOneSalon, getImageUrls } from "../../../firebase";
+import Accordion from "react-bootstrap/Accordion";
 
 //import styles from "../Edit.module.css";
 import stylesServices from "./SalonServices.module.css";
@@ -31,10 +32,6 @@ export const SalonService = ({ services, setServices }) => {
     staffCount: "",
     serviceDescription: "",
   });
-
-  //   const [services, setServices] = useState(inputServices);
-  console.log("SalonService:");
-  console.log(services);
 
   useEffect(() => {
     if (loading) return;
@@ -115,12 +112,27 @@ export const SalonService = ({ services, setServices }) => {
   };
   return (
     <div className={stylesServices["services__container"]}>
-      <form>
-        <div className={stylesServices.title}>SERVICES</div>
-        <div>
-          <p>You already do not have any services</p>
-        </div>
-      </form>
+      <Accordion flush>
+        {services.map((s) => (
+          <Accordion.Item
+            style={{ width: "300px" }}
+            key={s.service}
+            eventKey={s.service}
+          >
+            <Accordion.Header>{s.service}</Accordion.Header>
+            <Accordion.Body
+              style={{
+                color: "#5d4954",
+              }}
+            >
+              <strong>Description: </strong>
+              <span>{s.serviceDescription} </span>
+              <strong> Staff Count: </strong>
+              <span>{s.staffCount}</span>
+            </Accordion.Body>
+          </Accordion.Item>
+        ))}
+      </Accordion>
 
       <Modal
         isOpen={modalIsOpen}
@@ -149,7 +161,9 @@ export const SalonService = ({ services, setServices }) => {
               onBlur={validateServiceInput}
             />
             {serviceInputErr.service && (
-              <span className={styles.err}>{serviceInputErr.service}</span>
+              <span className={stylesServices.err}>
+                {serviceInputErr.service}
+              </span>
             )}
 
             <label htmlFor="staffCount" className={stylesServices.label}>
@@ -167,7 +181,9 @@ export const SalonService = ({ services, setServices }) => {
               onBlur={validateServiceInput}
             />
             {serviceInputErr.staffCount && (
-              <span className={styles.err}>{serviceInputErr.staffCount}</span>
+              <span className={stylesServices.err}>
+                {serviceInputErr.staffCount}
+              </span>
             )}
 
             <label
@@ -188,7 +204,9 @@ export const SalonService = ({ services, setServices }) => {
               onBlur={validateServiceInput}
             />
             {serviceInputErr.serviceDescription && (
-              <span className={styles.err}>{serviceInputErr.description}</span>
+              <span className={stylesServices.err}>
+                {serviceInputErr.serviceDescription}
+              </span>
             )}
 
             <button type="submit" className={stylesServices["modal__btn"]}>
@@ -197,20 +215,6 @@ export const SalonService = ({ services, setServices }) => {
           </div>
         </form>
       </Modal>
-      {services.map((s) => (
-        <div>
-          <span className={stylesServices.spanLabel}> Service: </span>
-          <span className={stylesServices.spanContent}>{s.service}, </span>
-          <span className={stylesServices.spanLabel}>
-            Service Description:{" "}
-          </span>
-          <span className={stylesServices.spanContent}>
-            {s.serviceDescription},{" "}
-          </span>
-          <span className={stylesServices.spanLabel}>Staff Count: </span>
-          <span className={stylesServices.spanContent}>{s.staffCount} </span>
-        </div>
-      ))}
       <button className={stylesServices["addService__btn"]} onClick={openModal}>
         Add new service
       </button>

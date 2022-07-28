@@ -86,3 +86,16 @@
   border: none;
   background: none;
 }
+
+.tip{
+  text-align: center;
+color:  rgb(226, 226, 226);
+min-height: 8vh;
+display: flex;
+align-items: center;
+justify-content: space-around;
+font-family: 'Poppins', sans-serif;
+padding-top: 15vh;
+padding-bottom: 5vh;
+font-size: 20px;
+}

@@ -37,12 +37,11 @@
     width: 15%;
     padding: 6px 0;
     text-decoration: none;
-    background: linear-gradient(125deg, #00ff35 0%, #0091a7 60%);
+    background: linear-gradient(125deg, #F5DCE0 0%, #E18AAA 60%);
     color: #fff;
     border-radius: 5px;
     font-size: 14px;
     transition: all 0.3s;
-
 }
 
 .button-container .button:hover{
