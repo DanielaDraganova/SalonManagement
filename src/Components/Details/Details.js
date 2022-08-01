@@ -4,15 +4,23 @@ import { getOneSalon, getImageUrls } from "../../firebase";
 
 import styles from "./Details.module.css";
 
-//let Carousel = require("react-responsive-carousel").Carousel;
-
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import Carousel from "react-bootstrap/Carousel";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 const Details = () => {
   const params = useParams();
   const salonId = params.salonId;
   const [salon, setSalon] = useState("");
+
+  const [modalShow, setModalShow] = useState(false);
+  const [serviceForBooking, setServiceForBooking] = useState({
+    service: "",
+    staffCount: "",
+    serviceDescription: "",
+  });
 
   useEffect(() => {
     async function getOne() {
@@ -20,6 +28,8 @@ const Details = () => {
 
       const imageUrls = await getImageUrls(salonRes.imageIds);
       salonRes.imageUrls = imageUrls;
+      console.log("IMAGE URLS");
+      console.log(imageUrls);
       setSalon(salonRes);
     }
     getOne();
@@ -27,17 +37,79 @@ const Details = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.centered}>{salon.salonName}</div>
+      <div>empty</div>
       <Carousel>
         {salon.imageUrls
           ? salon.imageUrls.map((i) => (
-              <div key={i} className={styles["image-style"]}>
-                <img src={i} alt="salonImg" />
-                <p className="legend"></p>
-              </div>
+              <Carousel.Item key={i}>
+                <img
+                  style={{
+                    width: "900px",
+                    height: "600px",
+                  }}
+                  src={i}
+                  alt="salonImg"
+                />
+                <Carousel.Caption>
+                  <h3>{salon.salonName}</h3>
+                </Carousel.Caption>
+              </Carousel.Item>
             ))
           : ""}
       </Carousel>
+
+      {salon
+        ? salon.services.map((service) => (
+            <Card
+              bg={"secondary"}
+              key={service.service}
+              text={"light"}
+              style={{ width: "18rem" }}
+              className="mb-2"
+            >
+              <Card.Header>{service.service}</Card.Header>
+              <Card.Body>
+                <Card.Text>{service.serviceDescription}</Card.Text>
+              </Card.Body>
+              <ListGroup className="list-group-flush">
+                <ListGroup.Item>Price:</ListGroup.Item>
+              </ListGroup>
+              <Card.Body>
+                <Card.Link
+                  onClick={() => {
+                    setServiceForBooking(service);
+                    setModalShow(true);
+                  }}
+                  href="#"
+                >
+                  Book
+                </Card.Link>
+              </Card.Body>
+            </Card>
+          ))
+        : ""}
+
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Make an appointment for {serviceForBooking.service}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Centered Modal</h4>
+          <p>
+            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
+            ac consectetur ac, vestibulum at eros.
+          </p>
+        </Modal.Body>
+      </Modal>
 
       <div className={styles["button-container"]}>
         <a href={`/${salonId}/salon-edit`} className={styles.button}>

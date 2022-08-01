@@ -2,10 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, editSalonInDB } from "../../firebase";
+import { auth, editSalonInDB, getOneSalon, getImageUrls } from "../../firebase";
+
 import Modal from "react-modal";
 Modal.setAppElement("#root");
-import { getOneSalon, getImageUrls } from "../../firebase";
+import TimePicker from "react-time-picker";
 
 import styles from "./Edit.module.css";
 import { SalonService } from "./SalonServices/SalonServices";
@@ -22,7 +23,12 @@ export const Edit = () => {
     managerName: "",
     description: "",
     location: "",
+    startTime: "",
+    endTime: "",
   });
+
+  const [startTime, setStartTime] = useState("10:00");
+  const [endTime, setEndTime] = useState("18:00");
 
   const [services, setServices] = useState([]);
 
@@ -64,45 +70,40 @@ export const Edit = () => {
     if (!user) navigate("/catalog");
   }, [user, loading]);
 
+  const validateTime = () => {
+    if (startTime == null || endTime == null) {
+      return "Enter opening and closing time";
+    }
+    return "";
+  };
+
   const validateInput = (e) => {
     let { name, value } = e.target;
     setErr((prev) => {
       const stateObj = { ...prev, [name]: "" };
 
       switch (name) {
-        case "email":
-          const pattern =
-            /[a-zA-Z0-9]+[\.]?([a-zA-Z0-9]+)?[\@][a-z]{3,9}[\.][a-z]{2,5}/g;
+        case "salonName":
           if (!value) {
-            stateObj[name] = "Please enter your Email.";
-          } else {
-            const result = pattern.test(value);
-            if (result === false) {
-              stateObj[name] = "Invalid Email";
-            }
-          }
-
-        case "password":
-          if (!value) {
-            stateObj[name] = "Please enter your Password.";
+            stateObj[name] = "Please enter Salon Name.";
           }
           break;
 
-        case "service":
+        case "managerName":
           if (!value) {
-            stateObj[name] = "Please enter Type of Service.";
+            stateObj[name] = "Please enter Manager Name.";
           }
           break;
 
-        case "staffCount":
+        case "description":
           if (!value) {
-            stateObj[name] = "Please enter Staff Count.";
+            stateObj[name] = "Please enter description.";
           }
           break;
 
-        case "serviceDescription":
+        case "location":
           if (!value) {
-            stateObj[name] = "Please enter Service description.";
+            stateObj[name] = "Please enter location.";
           }
           break;
 
@@ -116,7 +117,6 @@ export const Edit = () => {
 
   const editSalon = async (e) => {
     e.preventDefault();
-    console.log("in edit handler");
 
     let valid = true;
     Object.values(err).forEach((e) => {
@@ -125,10 +125,11 @@ export const Edit = () => {
         console.log(e);
       }
     });
+
     if (!valid) {
       alert("Invalid input");
     } else {
-      await editSalonInDB(salonId, { ...input });
+      await editSalonInDB(salonId, { ...input, startTime, endTime });
       navigate("/catalog");
     }
   };
@@ -140,10 +141,6 @@ export const Edit = () => {
           These forms are designed for you to fill in everything customers need
           <br />
           to visit your salon.
-          <br />
-          Try to fill them flawlessly.
-          <br />
-          Success!
         </h2>
       </div>
       <div className={styles.edit}>
@@ -162,6 +159,9 @@ export const Edit = () => {
               onChange={onInputChange}
               onBlur={validateInput}
             />
+            {err.salonName && (
+              <span className={styles.err}>{err.salonName}</span>
+            )}
 
             <label htmlFor="managerName">Manager Full Name</label>
             <input
@@ -175,6 +175,9 @@ export const Edit = () => {
               onChange={onInputChange}
               onBlur={validateInput}
             />
+            {err.managerName && (
+              <span className={styles.err}>{err.managerName}</span>
+            )}
 
             <label htmlFor="desc">Description</label>
             <input
@@ -188,6 +191,9 @@ export const Edit = () => {
               onChange={onInputChange}
               onBlur={validateInput}
             />
+            {err.description && (
+              <span className={styles.err}>{err.description}</span>
+            )}
 
             <label htmlFor="location">Location</label>
             <input
@@ -200,6 +206,24 @@ export const Edit = () => {
               placeholder="Location"
               onChange={onInputChange}
               onBlur={validateInput}
+            />
+            {err.location && <span className={styles.err}>{err.location}</span>}
+
+            <label htmlFor="startTime">Opening Time</label>
+            <TimePicker
+              disableClock={true}
+              id="startTime"
+              name="startTime"
+              onChange={setStartTime}
+              value={input.startTime}
+            />
+            <label htmlFor="endTime">Closing Time</label>
+            <TimePicker
+              disableClock={true}
+              id="endTime"
+              name="endTime"
+              onChange={setEndTime}
+              value={input.endTime}
             />
 
             <button type="submit" className={styles["edit__btn"]}>

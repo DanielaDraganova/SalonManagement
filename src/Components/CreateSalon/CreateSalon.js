@@ -38,13 +38,13 @@ function CreateSalon() {
       switch (name) {
         case "salonName":
           if (!value) {
-            stateObj[name] = "Please enter SalonName.";
+            stateObj[name] = "Please enter Salon Name.";
           }
           break;
 
         case "managerName":
           if (!value) {
-            stateObj[name] = "Please enter ManagerName.";
+            stateObj[name] = "Please enter Manager Name.";
           }
           break;
 

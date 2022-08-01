@@ -7,10 +7,12 @@ import Catalog from "./Catalog/Catalog";
 import Details from "./Details/Details";
 import { Edit } from "./Edit/Edit";
 import { Home } from "./Home/Home";
+import Header from "./Header/Header";
 
 function AppRouter() {
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/catalog" element={<Catalog />}></Route>

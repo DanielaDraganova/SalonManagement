@@ -199,4 +199,5 @@ export {
   getOneSalon,
   editSalonInDB,
   addNewServiceInDB,
+  deleteServiceInDB,
 };

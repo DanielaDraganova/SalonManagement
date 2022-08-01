@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import { auth, logout } from "../../firebase";
 import styles from "./Header.module.css";
 
@@ -7,14 +8,23 @@ function Header() {
   const [isNavActive, setIsNavActive] = useState(false);
 
   const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   const toggleNavActive = (e) => {
     setIsNavActive((current) => !current);
   };
+
+  const logoutAndNavigateToHome = () => {
+    logout();
+    navigate("/");
+  };
   return (
     <nav>
-      <div className={styles.logo}>
-        <h4>✿ Divine Beauty ✿</h4>
+      <div className={styles["nav-links"]}>
+        <a href="/catalog">
+          <img style={{ width: "90px" }} src="/logo.png" alt="logo" />
+          DIVINE BEAUTY ✿
+        </a>
       </div>
       <ul
         className={`${isNavActive ? styles["nav-active"] : ""} ${
@@ -30,7 +40,7 @@ function Header() {
         {user ? (
           <React.Fragment>
             <li>
-              <a onClick={logout}>Logout</a>
+              <a onClick={logoutAndNavigateToHome}>Logout</a>
             </li>
 
             <li>

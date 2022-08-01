@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { getAllSalons, getImageUrls } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styles from "./Catalog.module.css";
@@ -53,7 +53,13 @@ const Catalog = () => {
     </div>
   ));
 
-  return <div>{salonElements}</div>;
+  return (
+    <Fragment>
+      <div className={styles["main-container"]}>
+        <div>{salonElements}</div>
+      </div>
+    </Fragment>
+  );
 };
 
 export default Catalog;

@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { auth, addNewServiceInDB } from "../../../firebase";
 import Modal from "react-modal";
 Modal.setAppElement("#root");
-import { getOneSalon, getImageUrls } from "../../../firebase";
+//import Modal from "react-bootstrap/Modal";
+import {
+  getOneSalon,
+  getImageUrls,
+  deleteServiceInDB,
+} from "../../../firebase";
 import Accordion from "react-bootstrap/Accordion";
 
 //import styles from "../Edit.module.css";
@@ -110,6 +115,13 @@ export const SalonService = ({ services, setServices }) => {
       closeModal();
     }
   };
+
+  const deleteServiceHandler = async (service) => {
+    await deleteServiceInDB(salonId, service);
+    console.log();
+
+    setServices(services.filter((s) => s !== service));
+  };
   return (
     <div className={stylesServices["services__container"]}>
       <Accordion flush>
@@ -126,9 +138,30 @@ export const SalonService = ({ services, setServices }) => {
               }}
             >
               <strong>Description: </strong>
-              <span>{s.serviceDescription} </span>
+              <span
+                style={{
+                  wordBreak: "break-all",
+                }}
+              >
+                {s.serviceDescription}{" "}
+              </span>
+              <hr />
               <strong> Staff Count: </strong>
               <span>{s.staffCount}</span>
+              <hr />
+              <button
+                style={{
+                  textAlign: "center",
+                  fontSize: "large",
+                  padding: "0",
+                  border: "none",
+                  color: "red",
+                  background: "none",
+                }}
+                onClick={() => deleteServiceHandler(s)}
+              >
+                DELETE
+              </button>
             </Accordion.Body>
           </Accordion.Item>
         ))}
