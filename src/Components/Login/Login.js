@@ -84,7 +84,7 @@ const Login = () => {
     <Fragment>
       <div className={styles.welcome}>
         <h2>
-          Welcome to our Divine Beauty
+          Welcome to Divine Beauty
           <br />
           community
         </h2>

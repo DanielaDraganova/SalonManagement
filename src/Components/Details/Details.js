@@ -37,7 +37,6 @@ const Details = () => {
 
   return (
     <div className={styles.container}>
-      <div>empty</div>
       <Carousel>
         {salon.imageUrls
           ? salon.imageUrls.map((i) => (
