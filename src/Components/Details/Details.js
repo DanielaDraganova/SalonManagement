@@ -104,7 +104,7 @@ const Details = () => {
             Make an appointment for {serviceForBooking.service}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ paddingLeft: "0", paddingRight: "0" }}>
           <BookingCalendar salon={salon} />
         </Modal.Body>
       </Modal>

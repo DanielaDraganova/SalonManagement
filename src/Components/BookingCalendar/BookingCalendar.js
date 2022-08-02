@@ -14,11 +14,13 @@ Date.prototype.addDays = function (days) {
 
 const BookingCalendar = ({ salon }) => {
   const today = new Date();
+
   const first = today.getDate() - today.getDay() + 1;
+
   const monday = new Date(today.setDate(first));
+
   const [currentMonday, setCurrentMonday] = useState(monday);
-  console.log("SALON IN CALENDAR");
-  console.log(salon);
+
   const openingTime = new Date();
   const closingTime = new Date();
 
@@ -28,6 +30,7 @@ const BookingCalendar = ({ salon }) => {
     0,
     0
   );
+
   closingTime.setHours(
     salon.endTime.split(":")[0],
     salon.endTime.split(":")[1],
@@ -42,9 +45,9 @@ const BookingCalendar = ({ salon }) => {
         alignItems: "center",
       }}
     >
-      <button>&#8592;</button>
-      <Container fluid="md">
-        <Row className="justify-content-md-center">
+      <button className={styles["btn-booking"]}>&#8592;</button>
+      <Container fluid="true">
+        <Row className={styles["calendar-row"]}>
           {[...Array(7).keys()]
             .map((day) => currentMonday.addDays(day))
             .map((day) => (
@@ -61,7 +64,7 @@ const BookingCalendar = ({ salon }) => {
         </Row>
         {[...Array(closingTime.getHours() - openingTime.getHours()).keys()].map(
           (hours) => (
-            <Row className="justify-content-md-center">
+            <Row className={styles["calendar-row"]}>
               {[...Array(7).keys()].map((hour) => (
                 <Col className={styles.calendar}>
                   {openingTime.getHours() + hours + ":00"}
