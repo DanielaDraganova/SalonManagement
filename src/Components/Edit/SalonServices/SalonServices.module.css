@@ -73,3 +73,14 @@
     border-radius: 10px
 }
 
+@media screen and (max-width:1124px){
+    .index-post{
+        width: 562px; height: 400px;
+    }
+}
+@media screen and (max-width:562px){
+    .index-post{
+        width: 281px; height: 496px;
+    }
+}
+

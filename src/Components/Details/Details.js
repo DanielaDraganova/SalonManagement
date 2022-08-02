@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOneSalon, getImageUrls } from "../../firebase";
+import BookingCalendar from "../BookingCalendar/BookingCalendar";
 
 import styles from "./Details.module.css";
 
@@ -96,17 +97,15 @@ const Details = () => {
         onHide={() => setModalShow(false)}
       >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
+          <Modal.Title
+            style={{ fontFamily: "Poppins", fontWight: "bold" }}
+            id="contained-modal-title-vcenter"
+          >
             Make an appointment for {serviceForBooking.service}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>Centered Modal</h4>
-          <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-            ac consectetur ac, vestibulum at eros.
-          </p>
+          <BookingCalendar salon={salon} />
         </Modal.Body>
       </Modal>
 
