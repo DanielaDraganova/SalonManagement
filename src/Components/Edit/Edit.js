@@ -47,6 +47,8 @@ export const Edit = () => {
         description: salonRes.description,
         location: salonRes.location,
       });
+      setStartTime(salonRes.startTime);
+      setEndTime(salonRes.endTime);
     }
     getOne();
   }, []);
@@ -130,7 +132,7 @@ export const Edit = () => {
       alert("Invalid input");
     } else {
       await editSalonInDB(salonId, { ...input, startTime, endTime });
-      navigate("/catalog");
+      navigate(`/${salonId}/salon-details`);
     }
   };
 
@@ -215,7 +217,7 @@ export const Edit = () => {
               id="startTime"
               name="startTime"
               onChange={setStartTime}
-              value={input.startTime}
+              value={startTime}
             />
             <label htmlFor="endTime">Closing Time</label>
             <TimePicker
@@ -223,7 +225,7 @@ export const Edit = () => {
               id="endTime"
               name="endTime"
               onChange={setEndTime}
-              value={input.endTime}
+              value={endTime}
             />
 
             <button type="submit" className={styles["edit__btn"]}>

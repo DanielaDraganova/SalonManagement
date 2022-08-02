@@ -45,9 +45,9 @@ const BookingCalendar = ({ salon }) => {
         alignItems: "center",
       }}
     >
-      <button className={styles["btn-booking"]}>&#8592;</button>
+      <button style={{ marginRight: "10px" }}>&#8592;</button>
       <Container fluid="true">
-        <Row className={styles["calendar-row"]}>
+        <Row className={`${styles["calendar-row"]} ${"gx-0"}`}>
           {[...Array(7).keys()]
             .map((day) => currentMonday.addDays(day))
             .map((day) => (
@@ -75,7 +75,7 @@ const BookingCalendar = ({ salon }) => {
         )}
       </Container>
 
-      <button>&#8594;</button>
+      <button style={{ marginLeft: "10px" }}>&#8594;</button>
     </div>
   );
 };
