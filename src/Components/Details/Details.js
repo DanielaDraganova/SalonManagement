@@ -10,8 +10,11 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Modal from "react-bootstrap/Modal";
 import { LoadingContext } from "../../contexts/LoadingContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Details = () => {
+  const { user } = useContext(AuthContext);
+  console.log(user);
   const params = useParams();
   const salonId = params.salonId;
   const [salon, setSalon] = useState("");
@@ -39,6 +42,18 @@ const Details = () => {
     }
     getOne();
   }, []);
+
+  function isOwner() {
+    let isOwner = false;
+
+    if (user.uid == salon?.owner) {
+      isOwner = true;
+    }
+    console.log("OWNERS");
+    console.log(user.uid);
+    console.log(salon.owner);
+    return isOwner;
+  }
 
   return (
     <div className={styles.container}>
@@ -118,12 +133,14 @@ const Details = () => {
       </Modal>
       {isLoading ? (
         ""
-      ) : (
+      ) : isOwner() ? (
         <div className={styles["button-container"]}>
           <a href={`/${salonId}/salon-edit`} className={styles.button}>
             Edit Salon →
           </a>
         </div>
+      ) : (
+        ""
       )}
     </div>
   );

@@ -66,10 +66,7 @@ function CreateSalon() {
 
       return stateObj;
     });
-    console.log(err);
   };
-
-  console.log(err);
 
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
