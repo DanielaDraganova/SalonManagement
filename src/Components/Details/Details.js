@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOneSalon, getImageUrls } from "../../firebase";
 import BookingCalendar from "../BookingCalendar/BookingCalendar";
@@ -9,12 +9,14 @@ import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import { LoadingContext } from "../../contexts/LoadingContext";
 
 const Details = () => {
   const params = useParams();
   const salonId = params.salonId;
   const [salon, setSalon] = useState("");
+
+  const { showSpinner, hideSpinner, isLoading } = useContext(LoadingContext);
 
   const [modalShow, setModalShow] = useState(false);
   const [serviceForBooking, setServiceForBooking] = useState({
@@ -24,6 +26,7 @@ const Details = () => {
   });
 
   useEffect(() => {
+    showSpinner();
     async function getOne() {
       const salonRes = await getOneSalon(salonId);
 
@@ -32,6 +35,7 @@ const Details = () => {
       console.log("IMAGE URLS");
       console.log(imageUrls);
       setSalon(salonRes);
+      hideSpinner();
     }
     getOne();
   }, []);
@@ -105,15 +109,22 @@ const Details = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ paddingLeft: "0", paddingRight: "0" }}>
-          <BookingCalendar salon={salon} />
+          <BookingCalendar
+            salonId={salonId}
+            salon={salon}
+            service={serviceForBooking}
+          />
         </Modal.Body>
       </Modal>
-
-      <div className={styles["button-container"]}>
-        <a href={`/${salonId}/salon-edit`} className={styles.button}>
-          Edit Salon →
-        </a>
-      </div>
+      {isLoading ? (
+        ""
+      ) : (
+        <div className={styles["button-container"]}>
+          <a href={`/${salonId}/salon-edit`} className={styles.button}>
+            Edit Salon →
+          </a>
+        </div>
+      )}
     </div>
   );
 };

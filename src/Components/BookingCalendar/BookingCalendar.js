@@ -1,10 +1,16 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 import styles from "./BookingCalendar.module.css";
+import { AuthContext } from "../../contexts/AuthContext";
+import { createBookingInDB, getSalonBookings } from "../../firebase";
+
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Fragment, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { async } from "@firebase/util";
 
 Date.prototype.addDays = function (days) {
   let date = new Date(this.valueOf());
@@ -12,7 +18,15 @@ Date.prototype.addDays = function (days) {
   return date;
 };
 
-const BookingCalendar = ({ salon }) => {
+const BookingCalendar = ({ salonId, salon, service }) => {
+  const { user } = useContext(AuthContext);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [currBooking, setCurrBooking] = useState({});
+  const [salonBookings, setSalonBookings] = useState([]);
+
+  const handleCloseConfirmation = () => setShowConfirmation(false);
+  const handleShowConfirmation = () => setShowConfirmation(true);
+
   const today = new Date();
 
   const first = today.getDate() - today.getDay() + 1;
@@ -20,6 +34,14 @@ const BookingCalendar = ({ salon }) => {
   const monday = new Date(today.setDate(first));
 
   const [currentMonday, setCurrentMonday] = useState(monday);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let bookings = await getSalonBookings(salonId, service);
+      setSalonBookings(bookings);
+    };
+    fetchData();
+  }, []);
 
   const openingTime = new Date();
   const closingTime = new Date();
@@ -37,6 +59,79 @@ const BookingCalendar = ({ salon }) => {
     0,
     0
   );
+  const makeBookingHandler = async () => {
+    await createBookingInDB({
+      salonId: salonId,
+      userId: user.uid,
+      service: service.service,
+      date: currBooking.time,
+    });
+
+    let bookings = await getSalonBookings(salonId, service);
+    setSalonBookings(bookings);
+
+    handleCloseConfirmation();
+  };
+  function showBookingConfirmation(day, hours) {
+    const bookingDay = currentMonday.addDays(day);
+    bookingDay.setHours(
+      openingTime.getHours() + hours,
+      openingTime.getMinutes(),
+      0,
+      0
+    );
+    setCurrBooking({
+      time: bookingDay,
+      service: service,
+    });
+    handleShowConfirmation();
+  }
+
+  function isSlotAvailable(day, hours) {
+    const bookingDay = currentMonday.addDays(day);
+    bookingDay.setHours(
+      openingTime.getHours() + hours,
+      openingTime.getMinutes(),
+      0,
+      0
+    );
+    let bookingsInSlot = 0;
+    let staffCount = service.staffCount;
+
+    salonBookings.forEach((booking) => {
+      if (bookingDay.toISOString() == booking.date.toDate().toISOString()) {
+        bookingsInSlot++;
+      }
+    });
+
+    if (bookingsInSlot >= staffCount) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function isAlreadyBooked(day, hours) {
+    const bookingDay = currentMonday.addDays(day);
+    bookingDay.setHours(
+      openingTime.getHours() + hours,
+      openingTime.getMinutes(),
+      0,
+      0
+    );
+    let alreadyBooked = false;
+
+    salonBookings.forEach((booking) => {
+      if (
+        bookingDay.toISOString() == booking.date.toDate().toISOString() &&
+        booking.userId == user.uid
+      ) {
+        alreadyBooked = true;
+      }
+    });
+    return alreadyBooked;
+  }
+
   return (
     <div
       style={{
@@ -45,29 +140,56 @@ const BookingCalendar = ({ salon }) => {
         alignItems: "center",
       }}
     >
-      <button style={{ marginRight: "10px" }}>&#8592;</button>
-      <Container fluid="true">
-        <Row className={`${styles["calendar-row"]} ${"gx-0"}`}>
+      <button
+        onClick={() => {
+          setCurrentMonday(currentMonday.addDays(-7));
+        }}
+        style={{ margin: "10px" }}
+      >
+        &#8592;
+      </button>
+
+      <Container fluid>
+        <Row className={`${styles["calendar-row"]}`}>
           {[...Array(7).keys()]
             .map((day) => currentMonday.addDays(day))
             .map((day) => (
               <Col
-                className={`${styles.calendar} ${styles["calendar-header"]}`}
+                key={day}
+                className={`${styles.slot} ${styles["calendar-header"]}`}
               >
-                {day.getDate() +
-                  "." +
-                  (day.getMonth() + 1) +
-                  "." +
-                  day.getFullYear()}
+                {day.getDate() + "." + (day.getMonth() + 1)}
               </Col>
             ))}
         </Row>
         {[...Array(closingTime.getHours() - openingTime.getHours()).keys()].map(
           (hours) => (
-            <Row className={styles["calendar-row"]}>
-              {[...Array(7).keys()].map((hour) => (
-                <Col className={styles.calendar}>
-                  {openingTime.getHours() + hours + ":00"}
+            <Row key={"hours_" + hours} className={styles["calendar-row"]}>
+              {[...Array(7).keys()].map((day) => (
+                <Col
+                  key={"hours_" + hours + "_" + day}
+                  onClick={() => {
+                    if (isAlreadyBooked(day, hours)) {
+                      alert("You already booked");
+                    } else {
+                      isSlotAvailable(day, hours)
+                        ? showBookingConfirmation(day, hours)
+                        : alert("No free spots. Please choose another time!");
+                    }
+                  }}
+                  className={`${styles.slot} ${
+                    isSlotAvailable(day, hours) ? "" : styles["disabled-slot"]
+                  } ${
+                    isAlreadyBooked(day, hours)
+                      ? styles["already-booked-slot"]
+                      : ""
+                  }`}
+                >
+                  {openingTime.getHours() +
+                    hours +
+                    ":" +
+                    (openingTime.getMinutes() < 10 ? "0" : "") +
+                    openingTime.getMinutes()}
                 </Col>
               ))}
             </Row>
@@ -75,7 +197,35 @@ const BookingCalendar = ({ salon }) => {
         )}
       </Container>
 
-      <button style={{ marginLeft: "10px" }}>&#8594;</button>
+      <button
+        onClick={() => {
+          setCurrentMonday(currentMonday.addDays(7));
+        }}
+        style={{ margin: "10px" }}
+      >
+        &#8594;
+      </button>
+
+      <Modal show={showConfirmation} onHide={handleCloseConfirmation}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Booking</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to book appointment for {service.service} at{" "}
+          {currBooking.time?.getHours()}:
+          {currBooking.time?.getMinutes() < 10 ? "0" : ""}
+          {currBooking.time?.getMinutes()} on {currBooking.time?.getDate()}.
+          {currBooking.time?.getMonth() + 1}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseConfirmation}>
+            Close
+          </Button>
+          <Button onClick={makeBookingHandler} variant="primary">
+            Book
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

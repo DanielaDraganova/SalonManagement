@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, logout } from "../../firebase";
+import { AuthContext } from "../../contexts/AuthContext";
 import styles from "./Header.module.css";
 
 function Header() {
+  const { userLogout, user } = useContext(AuthContext);
   const [isNavActive, setIsNavActive] = useState(false);
 
-  const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
   const toggleNavActive = (e) => {
@@ -15,7 +14,7 @@ function Header() {
   };
 
   const logoutAndNavigateToHome = () => {
-    logout();
+    userLogout();
     navigate("/");
   };
   return (

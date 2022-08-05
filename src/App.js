@@ -1,6 +1,7 @@
 import AppRouter from "./components/AppRouter";
-import Header from "./components/Header/Header";
+
 import "bootstrap/dist/css/bootstrap.min.css";
+import { LoadingProvider } from "./contexts/LoadingContext";
 function App() {
   return (
     <div
@@ -8,7 +9,9 @@ function App() {
         backgroundColor: "#5d4954",
       }}
     >
-      <AppRouter />
+      <LoadingProvider>
+        <AppRouter />
+      </LoadingProvider>
     </div>
   );
 }

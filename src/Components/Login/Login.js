@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, logInWithEmailAndPassword } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { AuthContext } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
 
 const Login = () => {
+  const { userLogin, user } = useContext(AuthContext);
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -14,7 +14,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
 
   const onInputChange = (e) => {
@@ -69,16 +68,12 @@ const Login = () => {
     });
     if (!valid) {
     } else {
-      logInWithEmailAndPassword(input.email, input.password);
+      userLogin(input.email, input.password);
     }
   };
   useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
-    }
     if (user) navigate("/catalog");
-  }, [user, loading]);
+  }, [user]);
 
   return (
     <Fragment>

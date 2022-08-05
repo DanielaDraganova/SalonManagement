@@ -1,11 +1,14 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { getAllSalons, getImageUrls } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 import styles from "./Catalog.module.css";
+import { LoadingContext } from "../../contexts/LoadingContext";
 
 const Catalog = () => {
   const [salons, setSalons] = useState([]);
+
+  const { showSpinner, hideSpinner } = useContext(LoadingContext);
   useEffect(() => {
+    showSpinner();
     const fetchData = async () => {
       const salonResults = await getAllSalons();
 
@@ -22,13 +25,11 @@ const Catalog = () => {
       );
       await finalPromise;
 
-      console.log("ALL SALONS:");
-      console.log(allSalons);
       setSalons(allSalons);
+      hideSpinner();
     };
     fetchData();
   }, []);
-  //{s.salonName}
 
   const salonElements = salons.map((s) => (
     <div key={s.id} className="salon-container">

@@ -183,6 +183,32 @@ const deleteServiceInDB = async (salonId, service) => {
   });
 };
 
+const createBookingInDB = async (booking) => {
+  try {
+    console.log(db);
+    await addDoc(collection(db, "bookings"), booking);
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+
+const getSalonBookings = async (salonId, service) => {
+  const salonBookinfRef = collection(db, "bookings");
+
+  const q = query(
+    salonBookinfRef,
+    where("salonId", "==", salonId),
+    where("service", "==", service.service)
+  );
+  const salonBookings = await getDocs(q);
+  const result = [];
+  salonBookings.forEach((doc) => {
+    result.push(doc.data());
+  });
+  return result;
+};
+
 export {
   auth,
   db,
@@ -200,4 +226,6 @@ export {
   editSalonInDB,
   addNewServiceInDB,
   deleteServiceInDB,
+  createBookingInDB,
+  getSalonBookings,
 };
