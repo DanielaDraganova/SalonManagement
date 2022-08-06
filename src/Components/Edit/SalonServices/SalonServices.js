@@ -33,6 +33,7 @@ export const SalonService = ({ services, setServices }) => {
     service: "",
     staffCount: "",
     serviceDescription: "",
+    price: "",
   });
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -48,6 +49,7 @@ export const SalonService = ({ services, setServices }) => {
     service: "",
     staffCount: "",
     serviceDescription: "",
+    price: "",
   });
 
   const onServiceInputChange = (e) => {
@@ -76,6 +78,12 @@ export const SalonService = ({ services, setServices }) => {
         case "staffCount":
           if (!value) {
             stateObj[name] = "Please enter Staff Count.";
+          }
+          break;
+
+        case "price":
+          if (!value) {
+            stateObj[name] = "Please enter Price.";
           }
           break;
 
@@ -143,6 +151,9 @@ export const SalonService = ({ services, setServices }) => {
               <hr />
               <strong> Staff Count: </strong>
               <span>{s.staffCount}</span>
+              <hr />
+              <strong> Price: </strong>
+              <span>{s.price}</span>
               <hr />
               <button
                 style={{
@@ -222,6 +233,7 @@ export const SalonService = ({ services, setServices }) => {
             </label>
             <input
               required
+              maxLength={200}
               id="serviceDescription"
               type="text"
               name="serviceDescription"
@@ -234,6 +246,26 @@ export const SalonService = ({ services, setServices }) => {
             {serviceInputErr.serviceDescription && (
               <span className={stylesServices.err}>
                 {serviceInputErr.serviceDescription}
+              </span>
+            )}
+
+            <label htmlFor="staffCount" className={stylesServices.label}>
+              Price
+            </label>
+            <input
+              required
+              id="price"
+              type="number"
+              name="price"
+              className={stylesServices["modal__textBox"]}
+              value={serviceInput.price}
+              placeholder="Enter service price"
+              onChange={onServiceInputChange}
+              onBlur={validateServiceInput}
+            />
+            {serviceInputErr.price && (
+              <span className={stylesServices.err}>
+                {serviceInputErr.price}
               </span>
             )}
 

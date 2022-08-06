@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getOneSalon, getImageUrls } from "../../firebase";
+import { useNavigate, useParams } from "react-router-dom";
+import { getOneSalon, getImageUrls, deleteSalon } from "../../firebase";
 import BookingCalendar from "../BookingCalendar/BookingCalendar";
 
 import styles from "./Details.module.css";
@@ -13,6 +13,7 @@ import { LoadingContext } from "../../contexts/LoadingContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Details = () => {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   console.log(user);
   const params = useParams();
@@ -22,7 +23,14 @@ const Details = () => {
   const { showSpinner, hideSpinner, isLoading } = useContext(LoadingContext);
 
   const [modalShow, setModalShow] = useState(false);
+  const [serviceModalShow, setServiceModalShow] = useState(false);
   const [serviceForBooking, setServiceForBooking] = useState({
+    service: "",
+    staffCount: "",
+    serviceDescription: "",
+  });
+
+  const [serviceDetails, setSeviceDetails] = useState({
     service: "",
     staffCount: "",
     serviceDescription: "",
@@ -35,8 +43,7 @@ const Details = () => {
 
       const imageUrls = await getImageUrls(salonRes.imageIds);
       salonRes.imageUrls = imageUrls;
-      console.log("IMAGE URLS");
-      console.log(imageUrls);
+
       setSalon(salonRes);
       hideSpinner();
     }
@@ -53,8 +60,49 @@ const Details = () => {
     return isOwner;
   }
 
+  async function deleteSalonHanfler() {
+    if (confirm("Are you sure you want to delete this salon?")) {
+      const err = await deleteSalon(salonId);
+      if (err) {
+        alert(err);
+      } else {
+        navigate("/catalog");
+      }
+    }
+  }
+
   return (
     <div className={styles.container}>
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={serviceModalShow}
+        onHide={() => setServiceModalShow(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title
+            style={{ fontFamily: "Poppins", fontWight: "bold" }}
+            id="contained-modal-title-vcenter"
+          >
+            {serviceDetails.service}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{
+            paddingLeft: "0",
+            paddingRight: "0",
+          }}
+        >
+          <div className={styles["service-details"]}>
+            <div>{serviceDetails.serviceDescription}</div>
+            <hr />
+            <div style={{ fontStyle: "italic", fontWeight: "bold" }}>
+              Price: {serviceDetails.price}
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
       <Carousel>
         {salon.imageUrls
           ? salon.imageUrls.map((i) => (
@@ -81,26 +129,51 @@ const Details = () => {
               bg={"secondary"}
               key={service.service}
               text={"light"}
-              style={{ width: "18rem" }}
+              style={{
+                width: "18rem",
+                display: "inline-block",
+                margin: "30px",
+              }}
               className="mb-2"
             >
-              <Card.Header>{service.service}</Card.Header>
+              <Card.Header style={{ fontSize: "30px" }}>
+                {service.service}
+              </Card.Header>
+
               <Card.Body>
-                <Card.Text>{service.serviceDescription}</Card.Text>
-              </Card.Body>
-              <ListGroup className="list-group-flush">
-                <ListGroup.Item>Price:</ListGroup.Item>
-              </ListGroup>
-              <Card.Body>
-                <Card.Link
+                <button
+                  style={{
+                    borderRadius: "30%",
+                    textAlign: "center",
+                    padding: "5px",
+                    margin: "5px",
+                    background: "#5d4954",
+                    color: "white",
+                  }}
                   onClick={() => {
                     setServiceForBooking(service);
                     setModalShow(true);
                   }}
-                  href="#"
                 >
                   Book
-                </Card.Link>
+                </button>
+
+                <button
+                  style={{
+                    borderRadius: "20%",
+                    textAlign: "center",
+                    padding: "5px",
+                    margin: "5px",
+                    background: "#5d4954",
+                    color: "white",
+                  }}
+                  onClick={() => {
+                    setSeviceDetails(service);
+                    setServiceModalShow(true);
+                  }}
+                >
+                  Details
+                </button>
               </Card.Body>
             </Card>
           ))
@@ -129,12 +202,16 @@ const Details = () => {
           />
         </Modal.Body>
       </Modal>
+
       {isLoading ? (
         ""
       ) : isOwner() ? (
         <div className={styles["button-container"]}>
           <a href={`/${salonId}/salon-edit`} className={styles.button}>
             Edit Salon →
+          </a>
+          <a onClick={deleteSalonHanfler} className={styles.button}>
+            Delete salon →
           </a>
         </div>
       ) : (

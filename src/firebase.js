@@ -17,6 +17,7 @@ import {
   getFirestore,
   query,
   getDocs,
+  deleteDoc,
   getDoc,
   doc,
   collection,
@@ -211,6 +212,15 @@ const getSalonBookings = async (salonId, service) => {
   return result;
 };
 
+const deleteSalon = async (salonId) => {
+  try {
+    await deleteDoc(doc(db, "salons", salonId));
+  } catch (err) {
+    console.log(err);
+    return "Failed to delete salon.";
+  }
+};
+
 export {
   auth,
   db,
@@ -228,4 +238,5 @@ export {
   deleteServiceInDB,
   createBookingInDB,
   getSalonBookings,
+  deleteSalon,
 };

@@ -138,13 +138,13 @@ export const Edit = () => {
 
   return (
     <Fragment>
-      <div className={styles.tip}>
+      {/* <div className={styles.tip}>
         <h2>
           These forms are designed for you to fill in everything customers need
           <br />
           to visit your salon.
         </h2>
-      </div>
+      </div> */}
       <div className={styles.edit}>
         <form onSubmit={editSalon}>
           <div className={styles["edit__container"]}>
