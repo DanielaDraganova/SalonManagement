@@ -46,12 +46,10 @@ const Details = () => {
   function isOwner() {
     let isOwner = false;
 
-    if (user.uid == salon?.owner) {
+    if (user?.uid == salon?.owner) {
       isOwner = true;
     }
-    console.log("OWNERS");
-    console.log(user.uid);
-    console.log(salon.owner);
+
     return isOwner;
   }
 

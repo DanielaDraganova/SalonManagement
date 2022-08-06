@@ -7,8 +7,11 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user] = useAuthState(auth);
 
-  const userLogin = (email, password) => {
-    logInWithEmailAndPassword(email, password);
+  const userLogin = async (email, password) => {
+    const err = await logInWithEmailAndPassword(email, password);
+    if (err) {
+      alert(err);
+    }
   };
 
   const userLogout = () => {

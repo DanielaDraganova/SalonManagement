@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
 import { auth, createSalonInDB, uploadFiles } from "../../firebase";
 
 import styles from "./CreateSalon.module.css";
 
 function CreateSalon() {
+  const { user } = useContext(AuthContext);
+
   const [input, setInput] = useState({
     salonName: "",
     managerName: "",
@@ -68,11 +71,10 @@ function CreateSalon() {
     });
   };
 
-  const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const ref = useRef();
 
-  const createSalonHandler = (e) => {
+  const createSalonHandler = async (e) => {
     e.preventDefault();
     const imageIds = uploadFiles(images);
     console.log(imageIds);
@@ -84,7 +86,9 @@ function CreateSalon() {
       }
     });
     if (!valid) {
+      console.log("NOT VALID");
     } else {
+      console.log("BEFORE CREATE SALON");
       createSalonInDB({
         salonName: input.salonName,
         managerName: input.managerName,
@@ -92,7 +96,13 @@ function CreateSalon() {
         location: input.location,
         imageIds,
         services: [],
-      }).then(() => {
+        owner: user.uid,
+        startTime: "09:00",
+        endTime: "18:00",
+      }).then((err) => {
+        if (err) {
+          alert(err);
+        }
         ref.current.value = "";
         setInput({
           salonName: "",
@@ -105,10 +115,6 @@ function CreateSalon() {
       });
     }
   };
-  useEffect(() => {
-    if (loading) return;
-    if (!user) navigate("/catalog");
-  }, [user, loading]);
 
   const validateAll = () => {};
   return (

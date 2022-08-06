@@ -4,9 +4,8 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 import {
-  GoogleAuthProvider,
   getAuth,
-  signInWithPopup,
+
   //logInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -51,34 +50,27 @@ const storage = getStorage(app);
 const auth = getAuth(app);
 
 const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
-
-const signInWithGoogle = async () => {
-  try {
-    const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    const docs = await getDocs(q);
-    if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
-    }
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
 
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    console.error(err);
-    alert(err.message);
+    let errMessage = err.message;
+    let errCode = err.code;
+
+    console.log("err message" + errMessage);
+    console.log("err code" + errCode);
+
+    if (errCode == "auth/wrong-password") {
+      errMessage = "Invalid email or password.";
+    } else if (errCode == "auth/user-not-found") {
+      errMessage = "Invalid email or password.";
+    } else if (errCode == "auth/network-request-failed") {
+      errMessage =
+        "Error connecting to the server. Please check your network connection and try again.";
+    }
+
+    return errMessage;
   }
 };
 
@@ -93,18 +85,19 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       email,
     });
   } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
+    let errMessage = err.message;
+    let errCode = err.code;
 
-const sendPasswordReset = async (email) => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-    alert("Password reset link sent!");
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
+    if (errCode == "auth/email-already-in-use") {
+      errMessage = "The email already exist.";
+    } else if (errCode == "auth/user-not-found") {
+      errMessage = "Invalid email or password.";
+    } else if (errCode == "auth/network-request-failed") {
+      errMessage =
+        "Error connecting to the server. Please check your network connection and try again.";
+    }
+
+    return errMessage;
   }
 };
 
@@ -114,11 +107,20 @@ const logout = () => {
 
 const createSalonInDB = async (salon) => {
   try {
-    console.log(db);
+    console.log("INSIDE CREATE SALON");
     await addDoc(collection(db, "salons"), salon);
+    console.log("inside create salon");
   } catch (err) {
-    console.error(err);
-    alert(err.message);
+    console.log("CATCHING ERR");
+    console.log(err);
+    let errMessage = err.message;
+    let errCode = err.code;
+
+    if (errCode == "auth/network-request-failed") {
+      errMessage =
+        "Error connecting to the server. Please check your network connection and try again.";
+    }
+    return errMessage;
   }
 };
 
@@ -212,10 +214,8 @@ const getSalonBookings = async (salonId, service) => {
 export {
   auth,
   db,
-  signInWithGoogle,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
-  sendPasswordReset,
   logout,
   createSalonInDB,
   storage,

@@ -81,7 +81,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [user, loading, error] = useAuthState(auth);
 
-  const register = (e) => {
+  const register = async (e) => {
     e.preventDefault();
 
     let valid = true;
@@ -92,7 +92,15 @@ const Register = () => {
     });
     if (!valid) {
     } else {
-      registerWithEmailAndPassword(input.name, input.email, input.password);
+      const err = await registerWithEmailAndPassword(
+        input.name,
+        input.email,
+        input.password
+      );
+
+      if (err) {
+        alert(err);
+      }
     }
   };
   useEffect(() => {

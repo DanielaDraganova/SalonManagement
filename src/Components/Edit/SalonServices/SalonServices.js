@@ -1,8 +1,7 @@
-import { Fragment, useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
-import { auth, addNewServiceInDB } from "../../../firebase";
+
+import { addNewServiceInDB } from "../../../firebase";
 import Modal from "react-modal";
 Modal.setAppElement("#root");
 //import Modal from "react-bootstrap/Modal";
@@ -29,19 +28,12 @@ const customStyles = {
 export const SalonService = ({ services, setServices }) => {
   const params = useParams();
   const salonId = params.salonId;
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
 
   const [serviceInput, setServiceInput] = useState({
     service: "",
     staffCount: "",
     serviceDescription: "",
   });
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) navigate("/catalog");
-  }, [user, loading]);
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -75,6 +67,9 @@ export const SalonService = ({ services, setServices }) => {
         case "service":
           if (!value) {
             stateObj[name] = "Please enter Type of Service.";
+          }
+          if (services.map((s) => s.service).includes(value)) {
+            stateObj[name] = "Service already exists.";
           }
           break;
 
