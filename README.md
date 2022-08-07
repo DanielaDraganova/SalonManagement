@@ -1,3 +1,13 @@
+# Beauty Salon App 
+
+This app is used for managing beauty salons. Users can add a new salon with all the necessary details. Users can also make bookings for different services in all the existing salons. 
+
+# Starting the app 
+
+You can run the application using 
+### `npm start`
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
