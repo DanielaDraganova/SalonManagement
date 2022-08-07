@@ -141,22 +141,26 @@ const Details = () => {
               </Card.Header>
 
               <Card.Body>
-                <button
-                  style={{
-                    borderRadius: "30%",
-                    textAlign: "center",
-                    padding: "5px",
-                    margin: "5px",
-                    background: "#5d4954",
-                    color: "white",
-                  }}
-                  onClick={() => {
-                    setServiceForBooking(service);
-                    setModalShow(true);
-                  }}
-                >
-                  Book
-                </button>
+                {user ? (
+                  <button
+                    style={{
+                      borderRadius: "30%",
+                      textAlign: "center",
+                      padding: "5px",
+                      margin: "5px",
+                      background: "#5d4954",
+                      color: "white",
+                    }}
+                    onClick={() => {
+                      setServiceForBooking(service);
+                      setModalShow(true);
+                    }}
+                  >
+                    Book
+                  </button>
+                ) : (
+                  ""
+                )}
 
                 <button
                   style={{
