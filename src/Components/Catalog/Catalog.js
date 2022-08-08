@@ -7,6 +7,7 @@ const Catalog = () => {
   const [salons, setSalons] = useState([]);
 
   const { showSpinner, hideSpinner } = useContext(LoadingContext);
+
   useEffect(() => {
     showSpinner();
     const fetchData = async () => {

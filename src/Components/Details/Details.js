@@ -136,7 +136,7 @@ const Details = () => {
               }}
               className="mb-2"
             >
-              <Card.Header style={{ fontSize: "30px" }}>
+              <Card.Header style={{ fontSize: "20px" }}>
                 {service.service}
               </Card.Header>
 

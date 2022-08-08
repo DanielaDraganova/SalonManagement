@@ -115,6 +115,12 @@ export const SalonService = ({ services, setServices }) => {
     } else {
       await addNewServiceInDB(salonId, { ...serviceInput });
       setServices((prevState) => [...prevState, serviceInput]);
+      setServiceInput({
+        service: "",
+        staffCount: "",
+        serviceDescription: "",
+        price: "",
+      });
       closeModal();
     }
   };
@@ -143,7 +149,8 @@ export const SalonService = ({ services, setServices }) => {
               <strong>Description: </strong>
               <span
                 style={{
-                  wordBreak: "break-all",
+                  wordBreak: "break-word",
+                  overflowWrap: "break-word",
                 }}
               >
                 {s.serviceDescription}{" "}
@@ -255,7 +262,6 @@ export const SalonService = ({ services, setServices }) => {
             <input
               required
               id="price"
-              type="number"
               name="price"
               className={stylesServices["modal__textBox"]}
               value={serviceInput.price}
