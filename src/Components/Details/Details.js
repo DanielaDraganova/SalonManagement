@@ -7,7 +7,7 @@ import styles from "./Details.module.css";
 
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
+
 import Modal from "react-bootstrap/Modal";
 import { LoadingContext } from "../../contexts/LoadingContext";
 import { AuthContext } from "../../contexts/AuthContext";
