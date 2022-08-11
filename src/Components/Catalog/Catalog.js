@@ -57,7 +57,7 @@ const Catalog = () => {
 
   return (
     <Fragment>
-      <div className={styles["main-container"]}>
+      <div>
         <div>{salonElements}</div>
       </div>
     </Fragment>

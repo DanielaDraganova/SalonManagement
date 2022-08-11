@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { Link, useNavigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import { auth, createSalonInDB, uploadFiles } from "../../firebase";
 
@@ -8,6 +8,13 @@ import styles from "./CreateSalon.module.css";
 
 function CreateSalon() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/catalog");
+    }
+  }, []);
 
   const [input, setInput] = useState({
     salonName: "",
@@ -71,7 +78,6 @@ function CreateSalon() {
     });
   };
 
-  const navigate = useNavigate();
   const ref = useRef();
 
   const createSalonHandler = async (e) => {

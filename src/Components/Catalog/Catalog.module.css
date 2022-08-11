@@ -1,8 +1,8 @@
 /* .main-container{
-    
+   
 } */
 .salon-container{
-    padding: 10px;
+    padding: 10px; 
     margin: 0;
     background: #eee;
     font-family: sans-serif;
@@ -103,6 +103,8 @@
     padding-left: 15px;
 
 }
+
+
 
 @media screen and (max-width:1124px){
     .index-post{

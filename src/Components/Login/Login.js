@@ -16,6 +16,12 @@ const Login = () => {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      return navigate("/catalog");
+    }
+  }, [user]);
+
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({
@@ -71,9 +77,6 @@ const Login = () => {
       userLogin(input.email, input.password);
     }
   };
-  useEffect(() => {
-    if (user) navigate("/catalog");
-  }, [user]);
 
   return (
     <Fragment>
