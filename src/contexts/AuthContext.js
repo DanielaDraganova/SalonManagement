@@ -5,7 +5,7 @@ import { auth, logInWithEmailAndPassword, logout } from "../firebase";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user] = useAuthState(auth);
+  const [user, isLoading] = useAuthState(auth);
 
   const userLogin = async (email, password) => {
     const err = await logInWithEmailAndPassword(email, password);
@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         userLogin,
         userLogout,
+        isLoading,
         user,
       }}
     >

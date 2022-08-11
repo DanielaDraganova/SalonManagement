@@ -10,7 +10,7 @@ import { createBookingInDB, getSalonBookings } from "../../firebase";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useContext, useEffect, useState } from "react";
-import { async } from "@firebase/util";
+import { LoadingContext } from "../../contexts/LoadingContext";
 
 Date.prototype.addDays = function (days) {
   let date = new Date(this.valueOf());
@@ -19,6 +19,8 @@ Date.prototype.addDays = function (days) {
 };
 
 const BookingCalendar = ({ salonId, salon, service }) => {
+  const { showSpinner, hideSpinner } = useContext(LoadingContext);
+
   const { user } = useContext(AuthContext);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [currBooking, setCurrBooking] = useState({});
@@ -36,9 +38,12 @@ const BookingCalendar = ({ salonId, salon, service }) => {
   const [currentMonday, setCurrentMonday] = useState(monday);
 
   useEffect(() => {
+    showSpinner();
+
     const fetchData = async () => {
       let bookings = await getSalonBookings(salonId, service);
       setSalonBookings(bookings);
+      hideSpinner();
     };
     fetchData();
   }, []);
@@ -89,6 +94,7 @@ const BookingCalendar = ({ salonId, salon, service }) => {
 
   function isSlotAvailable(day, hours) {
     const bookingDay = currentMonday.addDays(day);
+
     bookingDay.setHours(
       openingTime.getHours() + hours,
       openingTime.getMinutes(),
@@ -103,8 +109,8 @@ const BookingCalendar = ({ salonId, salon, service }) => {
         bookingsInSlot++;
       }
     });
-
-    if (bookingsInSlot >= staffCount) {
+    const isInThePast = bookingDay.getTime() < new Date().getTime();
+    if (bookingsInSlot >= staffCount || isInThePast) {
       return false;
     } else {
       return true;

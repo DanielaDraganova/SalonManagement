@@ -7,14 +7,14 @@ import { auth, createSalonInDB, uploadFiles } from "../../firebase";
 import styles from "./CreateSalon.module.css";
 
 function CreateSalon() {
-  const { user } = useContext(AuthContext);
+  const { user, isLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && !user) {
       navigate("/catalog");
     }
-  }, []);
+  }, [user, isLoading]);
 
   const [input, setInput] = useState({
     salonName: "",
