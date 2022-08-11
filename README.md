@@ -5,9 +5,6 @@ Beauty Salon App
 
 Beauty Salon App is an app that is used for managing beauty salons. Users can add a new salon with all the necessary details. Users can also make bookings for different services in all the existing salons. 
 
-# Screenshots
-
-
 
 # Setup / Installation: 💻
 
