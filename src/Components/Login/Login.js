@@ -5,6 +5,11 @@ import styles from "./Login.module.css";
 
 const Login = () => {
   const { userLogin, user } = useContext(AuthContext);
+  useEffect(() => {
+    if (user) {
+      return navigate("/catalog");
+    }
+  }, [user]);
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -15,12 +20,6 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      return navigate("/catalog");
-    }
-  }, [user]);
 
   const onInputChange = (e) => {
     const { name, value } = e.target;

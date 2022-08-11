@@ -11,6 +11,7 @@ import Header from "./Header/Header";
 import Spinner from "./Spinner/Spinner";
 import { LoadingContext } from "../contexts/LoadingContext";
 import { AuthProvider } from "../contexts/AuthContext";
+import NotFound from "./NotFound/NotFound";
 
 function AppRouter() {
   const { isLoading } = useContext(LoadingContext);
@@ -28,6 +29,7 @@ function AppRouter() {
           <Route path="/create-salon" element={<CreateSalon />}></Route>
           <Route path="/:salonId/salon-details" element={<Details />}></Route>
           <Route path="/:salonId/salon-edit" element={<Edit />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
