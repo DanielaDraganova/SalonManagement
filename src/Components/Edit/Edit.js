@@ -182,11 +182,12 @@ export const Edit = () => {
             )}
 
             <label htmlFor="desc">Description</label>
-            <input
+            <textarea
               required
               id="desc"
               type="text"
               name="description"
+              maxLength={90}
               className={styles["edit__textBox"]}
               value={input.description}
               placeholder="Description"

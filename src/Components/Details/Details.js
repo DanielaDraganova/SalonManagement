@@ -60,7 +60,7 @@ const Details = () => {
     return isOwner;
   }
 
-  async function deleteSalonHanfler() {
+  async function deleteSalonHandler() {
     if (confirm("Are you sure you want to delete this salon?")) {
       const err = await deleteSalon(salonId);
       if (err) {
@@ -214,7 +214,7 @@ const Details = () => {
           <a href={`/${salonId}/salon-edit`} className={styles.button}>
             Edit Salon →
           </a>
-          <a onClick={deleteSalonHanfler} className={styles.button}>
+          <a onClick={deleteSalonHandler} className={styles.button}>
             Delete salon →
           </a>
         </div>

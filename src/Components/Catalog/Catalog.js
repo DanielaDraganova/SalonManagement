@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getAllSalons, getImageUrls } from "../../firebase";
 import styles from "./Catalog.module.css";
 import { LoadingContext } from "../../contexts/LoadingContext";
@@ -55,13 +55,7 @@ const Catalog = () => {
     </div>
   ));
 
-  return (
-    <Fragment>
-      <div>
-        <div>{salonElements}</div>
-      </div>
-    </Fragment>
-  );
+  return <div className={styles["main-container"]}>{salonElements}</div>;
 };
 
 export default Catalog;

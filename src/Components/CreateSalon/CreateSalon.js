@@ -158,11 +158,12 @@ function CreateSalon() {
           )}
 
           <label htmlFor="desc">Description</label>
-          <input
+          <textarea
             required
             id="desc"
             type="text"
             name="description"
+            maxlength={90}
             className={styles["create__textBox"]}
             value={input.description}
             placeholder="Description"

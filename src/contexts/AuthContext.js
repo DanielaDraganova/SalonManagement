@@ -4,6 +4,7 @@ import { auth, logInWithEmailAndPassword, logout } from "../firebase";
 
 export const AuthContext = createContext();
 
+// All components have information about current user && can login and logout
 export const AuthProvider = ({ children }) => {
   const [user, isLoading] = useAuthState(auth);
 

@@ -164,7 +164,9 @@ const BookingCalendar = ({ salonId, salon, service }) => {
                 key={day}
                 className={`${styles.slot} ${styles["calendar-header"]}`}
               >
-                {day.getDate() + "." + (day.getMonth() + 1)}
+                {day.getDate()}
+                <br />
+                {day.toLocaleString("default", { month: "short" })}
               </Col>
             ))}
         </Row>
