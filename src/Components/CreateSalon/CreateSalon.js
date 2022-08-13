@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
-import { auth, createSalonInDB, uploadFiles } from "../../firebase";
+import { createSalonInDB, uploadFiles } from "../../firebase";
 
 import styles from "./CreateSalon.module.css";
 

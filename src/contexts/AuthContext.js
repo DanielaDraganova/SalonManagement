@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, logInWithEmailAndPassword, logout } from "../firebase";
 

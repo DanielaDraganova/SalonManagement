@@ -166,6 +166,7 @@ const BookingCalendar = ({ salonId, salon, service }) => {
               >
                 {day.getDate()}
                 <br />
+
                 {day.toLocaleString("default", { month: "short" })}
               </Col>
             ))}
@@ -182,7 +183,7 @@ const BookingCalendar = ({ salonId, salon, service }) => {
                     } else {
                       isSlotAvailable(day, hours)
                         ? showBookingConfirmation(day, hours)
-                        : alert("No free spots. Please choose another time!");
+                        : alert("Cannot book. This slot is not available");
                     }
                   }}
                   className={`${styles.slot} ${
@@ -222,8 +223,8 @@ const BookingCalendar = ({ salonId, salon, service }) => {
           Are you sure you want to book appointment for {service.service} at{" "}
           {currBooking.time?.getHours()}:
           {currBooking.time?.getMinutes() < 10 ? "0" : ""}
-          {currBooking.time?.getMinutes()} on {currBooking.time?.getDate()}.
-          {currBooking.time?.getMonth() + 1}
+          {currBooking.time?.getMinutes()} on {currBooking.time?.getDate()}{" "}
+          {currBooking.time?.toLocaleString("default", { month: "short" })}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseConfirmation}>
